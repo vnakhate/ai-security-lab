@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 Separate WAF Path",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1060,
+      520
+    ]
+  },
+  "components": [
+    {
+      "id": "cli",
+      "type": "frontend",
+      "label": "Operator CLI",
+      "sublabel": "run-lab.sh waf",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "collector",
+      "type": "security",
+      "label": "WAF Python process",
+      "sublabel": "Validate scope \u00b7 pace requests",
+      "pos": [
+        330,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "curl",
+      "type": "backend",
+      "label": "curl subprocess",
+      "sublabel": "GET query \u00b7 no redirects",
+      "pos": [
+        630,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "target",
+      "type": "external",
+      "label": "Approved HTTP(S) target",
+      "sublabel": "Exact URL \u00b7 selected probes",
+      "pos": [
+        850,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "scope",
+      "type": "database",
+      "label": "WAF scope file",
+      "sublabel": "Owner \u00b7 expiry \u00b7 code \u00b7 caps",
+      "pos": [
+        330,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "database",
+      "label": "WAF evidence files",
+      "sublabel": "Headers \u00b7 body \u00b7 trace \u00b7 hashes",
+      "pos": [
+        630,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "launch",
+      "from": "cli",
+      "to": "collector",
+      "label": "Shell exec",
+      "variant": "default"
+    },
+    {
+      "id": "validate",
+      "from": "scope",
+      "to": "collector",
+      "label": "Read / validate",
+      "variant": "security",
+      "labelDy": 55
+    },
+    {
+      "id": "spawn",
+      "from": "collector",
+      "to": "curl",
+      "label": "Bounded argv",
+      "variant": "emphasis"
+    },
+    {
+      "id": "request",
+      "from": "curl",
+      "to": "target",
+      "label": "GET + query",
+      "variant": "emphasis",
+      "labelDy": -35
+    },
+    {
+      "id": "save",
+      "from": "curl",
+      "to": "evidence",
+      "label": "Raw captures",
+      "variant": "default",
+      "labelDy": 65
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Separate authorization",
+      "items": [
+        "WAF collection requires its own exact URL and scope file.",
+        "Harness approvals do not authorize this branch."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Operational status",
+      "items": [
+        "Offline tests passed; no new external assessment was run.",
+        "Blocked benign controls stop collection before attack probes."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Current boundary",
+      "items": [
+        "Collector uses curl, not the harness Broker or model.",
+        "IP/DNS isolation and signed approvals remain outside this pilot."
+      ]
+    }
+  ]
+}

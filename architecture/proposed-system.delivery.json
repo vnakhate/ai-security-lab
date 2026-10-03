@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/lab/architecture/proposed-system.architecture.json",
+  "output": "/Users/venky/work/preprod/lab/architecture/proposed-system.html",
+  "specification": {
+    "sha256": "b8115cbd5168379e6682cd780db25bf6da2f60923aa256f05b9eedce44b5ce15",
+    "bytes": 5589
+  },
+  "artifact": {
+    "sha256": "91aceffb45fb6f75810548071af9745e43531723c6acae955ef61a0098427ce4",
+    "bytes": 715651
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

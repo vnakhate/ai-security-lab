@@ -1,0 +1,17 @@
+{
+  "harness_version": "0.1.0",
+  "python": "3.14.6",
+  "environment": "uv-created lab/.venv",
+  "source_sha256": "974b3d003c22be34271a9b283c5fd366dcc5b58eab581f08c1cd9698eb9077ce",
+  "regression_tests": 17,
+  "regression_result": "passed",
+  "test_log": "test-results.log",
+  "pyrit_version": "1.1.0",
+  "pyrit_dataset_seeds_accepted": 8,
+  "pyrit_execution": "not run",
+  "actual_local_model_calibration": "pending; mock endpoint contract tested",
+  "external_targets": "none",
+  "frontier_requests": "none",
+  "installed_scanner_or_agent_execution": "none",
+  "os_isolation_acceptance": "not implemented or tested"
+}

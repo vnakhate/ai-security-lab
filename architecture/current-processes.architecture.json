@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 Current Process Architecture",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1060,
+      520
+    ]
+  },
+  "components": [
+    {
+      "id": "inputs",
+      "type": "database",
+      "label": "Catalog + approval files",
+      "sublabel": "Scope \u00b7 source hash \u00b7 expiry",
+      "pos": [
+        40,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "fixture",
+      "type": "backend",
+      "label": "In-process fixtures",
+      "sublabel": "Deterministic calibration",
+      "pos": [
+        330,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "model",
+      "type": "external",
+      "label": "Optional local model",
+      "sublabel": "Planner / target inference",
+      "pos": [
+        850,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "cli",
+      "type": "frontend",
+      "label": "Operator CLI",
+      "sublabel": "run-lab.sh \u2192 harness.py",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "harness",
+      "type": "backend",
+      "label": "Harness Python process",
+      "sublabel": "Campaign \u00b7 Broker \u00b7 scoring",
+      "pos": [
+        330,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "Range Python process",
+      "sublabel": "Session auth \u00b7 RAG \u00b7 mock tools",
+      "pos": [
+        630,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "pilot",
+      "type": "backend",
+      "label": "Optional pilot process",
+      "sublabel": "Starts range \u00b7 calls harness",
+      "pos": [
+        40,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "files",
+      "type": "database",
+      "label": "Harness run files",
+      "sublabel": "Events \u00b7 report \u00b7 hash chain",
+      "pos": [
+        330,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "Range-owned files",
+      "sublabel": "SQLite \u00b7 audit \u00b7 model logs",
+      "pos": [
+        630,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "cli-run",
+      "from": "cli",
+      "to": "harness",
+      "label": "run / assist",
+      "variant": "emphasis",
+      "labelDy": 15
+    },
+    {
+      "id": "scope-read",
+      "from": "inputs",
+      "to": "harness",
+      "label": "Read / validate",
+      "variant": "security"
+    },
+    {
+      "id": "calibrate",
+      "from": "harness",
+      "to": "fixture",
+      "label": "fixture adapter",
+      "variant": "default"
+    },
+    {
+      "id": "http",
+      "from": "harness",
+      "to": "app",
+      "label": "POST + session",
+      "variant": "emphasis",
+      "labelDy": 25
+    },
+    {
+      "id": "ai",
+      "from": "app",
+      "to": "model",
+      "label": "AI inference",
+      "variant": "dashed"
+    },
+    {
+      "id": "plan",
+      "from": "harness",
+      "to": "model",
+      "label": "assist only",
+      "variant": "dashed"
+    },
+    {
+      "id": "log",
+      "from": "harness",
+      "to": "files",
+      "label": "Write evidence",
+      "variant": "default",
+      "labelDy": 65
+    },
+    {
+      "id": "store",
+      "from": "app",
+      "to": "state",
+      "label": "Write state / logs",
+      "variant": "default",
+      "labelDy": 65
+    },
+    {
+      "id": "pilot-call",
+      "from": "pilot",
+      "to": "harness",
+      "label": "Python call",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "One operator-side Python process",
+      "items": [
+        "Broker, translation, scoring and fixtures are in-process functions.",
+        "Scope and approval are local files, not an approval service."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Pilot orchestration and verification",
+      "items": [
+        "run_pilot.py starts and stops each range subprocess.",
+        "It reads SQLite, audit and harness hashes after each web campaign."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Optional model paths",
+      "items": [
+        "assist selects catalog IDs; suggestions need review and reapproval.",
+        "The AI range calls inference directly; neither model path is calibrated."
+      ]
+    }
+  ]
+}

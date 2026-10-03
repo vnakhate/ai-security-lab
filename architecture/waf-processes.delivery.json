@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/lab/architecture/waf-processes.architecture.json",
+  "output": "/Users/venky/work/preprod/lab/architecture/waf-processes.html",
+  "specification": {
+    "sha256": "b30057bbf10f57bef23a8b6e69cf994ae8e8a622ebf029ff7b85463d10b80fea",
+    "bytes": 3247
+  },
+  "artifact": {
+    "sha256": "177234818fad0d3269d894ce2b1f0aa2fcf962d3fd0997045f8d9d1f77528ae8",
+    "bytes": 705433
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

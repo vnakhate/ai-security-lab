@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 Governance and Assurance",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1395,
+      530
+    ]
+  },
+  "components": [
+    {
+      "id": "program",
+      "type": "security",
+      "label": "Program approval",
+      "sublabel": "CISO \u00b7 mandate \u00b7 funding",
+      "pos": [
+        39.6,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "scope",
+      "type": "security",
+      "label": "Campaign approval",
+      "sublabel": "Asset owner \u00b7 scope",
+      "pos": [
+        277.2,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "prepare",
+      "type": "backend",
+      "label": "Prepare / validate",
+      "sublabel": "Pins \u00b7 logs \u00b7 reset ready",
+      "pos": [
+        514.8000000000001,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "run",
+      "type": "backend",
+      "label": "Bounded execution",
+      "sublabel": "Actions \u00b7 time \u00b7 spend",
+      "pos": [
+        752.4000000000001,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "verify",
+      "type": "security",
+      "label": "Independent review",
+      "sublabel": "Replay \u00b7 negative controls",
+      "pos": [
+        990.0,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "report",
+      "type": "frontend",
+      "label": "Decision / handoff",
+      "sublabel": "Brief \u00b7 remediation owner",
+      "pos": [
+        1227.6000000000001,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "action",
+      "type": "security",
+      "label": "Action approval",
+      "sublabel": "Named human \u00b7 expiring",
+      "pos": [
+        752.4000000000001,
+        55
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "stop",
+      "type": "security",
+      "label": "Emergency stop",
+      "sublabel": "Kill \u00b7 deny egress \u00b7 revoke",
+      "pos": [
+        752.4000000000001,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "reset",
+      "type": "backend",
+      "label": "Reset and retest",
+      "sublabel": "Clean state \u00b7 closure test",
+      "pos": [
+        1227.6000000000001,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "charter",
+      "from": "program",
+      "to": "scope",
+      "label": "Authorize",
+      "variant": "security"
+    },
+    {
+      "id": "prepare-scope",
+      "from": "scope",
+      "to": "prepare",
+      "label": "Approved",
+      "variant": "security"
+    },
+    {
+      "id": "launch",
+      "from": "prepare",
+      "to": "run",
+      "label": "Ready",
+      "variant": "emphasis"
+    },
+    {
+      "id": "results",
+      "from": "run",
+      "to": "verify",
+      "label": "Evidence",
+      "variant": "default"
+    },
+    {
+      "id": "handoff",
+      "from": "verify",
+      "to": "report",
+      "label": "Verified",
+      "variant": "emphasis"
+    },
+    {
+      "id": "sensitive",
+      "from": "action",
+      "to": "run",
+      "label": "Permission",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "halt",
+      "from": "run",
+      "to": "stop",
+      "label": "Deviation",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "closure",
+      "from": "report",
+      "to": "reset",
+      "label": "Follow-up",
+      "variant": "default",
+      "labelDy": 24
+    }
+  ],
+  "boundaries": [],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Three levels of approval",
+      "items": [
+        "Program: capability. Campaign: exact assets and limits.",
+        "Action: sensitive work outside campaign permissions."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Stop authority",
+      "items": [
+        "Operator and service owner can halt a campaign.",
+        "Missing policy, expired approvals or lost logging deny work."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Acceptance is evidence based",
+      "items": [
+        "Independent review separates claims from confirmed impact.",
+        "Reporting does not itself authorize deployment or disclosure."
+      ]
+    }
+  ]
+}

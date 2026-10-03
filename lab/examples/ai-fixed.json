@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "owner": "Example owner",
+  "data_class": "synthetic",
+  "target": {
+    "adapter": "fixture",
+    "profile": "fixed"
+  },
+  "tests": [
+    "ai-injection",
+    "ai-disclosure",
+    "ai-tool-approval",
+    "ai-retrieval",
+    "ai-context",
+    "ai-consumption",
+    "ai-output",
+    "ai-misinformation"
+  ],
+  "limits": {
+    "requests": 100,
+    "seconds": 900,
+    "interval_seconds": 1,
+    "timeout_seconds": 10,
+    "response_bytes": 1048576
+  }
+}

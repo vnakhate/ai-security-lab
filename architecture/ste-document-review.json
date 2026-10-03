@@ -1,0 +1,9 @@
+{
+  "mode": "STE-flavored explanatory prose with procedural sentence checks",
+  "certified_asd_ste100_compliance": false,
+  "changed_original_blocks": 62,
+  "source_urls_preserved": true,
+  "inline_code_identifiers_preserved": true,
+  "scope": "Language and structure only. Technical requirements, approvals and numeric limits retained. Glossary defines existing terms.",
+  "lexical_review": "The linter synonym-rotation findings concern different actions: obtain information, correct a fixture, confirm findings, alter evidence, check readiness and validate tool formatting. Retained for precision."
+}

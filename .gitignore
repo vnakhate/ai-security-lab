@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+# Downloaded tooling and machine-local runtime state
+/pentest-tools/repos/
+/pentest-tools/node-tools/
+/pentest-tools/logs/
+/pentest-tools/bin/httpx
+/pentest-tools/bin/python3.12
+# Campaign data includes private synthetic session files
+/lab/runs/
+/lab/campaigns/
+/lab/waf-assessment/runs/
+/lab/waf-assessment/results/

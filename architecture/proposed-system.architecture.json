@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 Proposed Architecture",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1060,
+      520
+    ]
+  },
+  "components": [
+    {
+      "id": "models",
+      "type": "security",
+      "label": "Model access broker",
+      "sublabel": "Data policy \u00b7 keys \u00b7 cost",
+      "pos": [
+        40,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "controller",
+      "type": "security",
+      "label": "Trusted controller",
+      "sublabel": "Signed scope \u00b7 permits \u00b7 stop",
+      "pos": [
+        580,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "inference",
+      "type": "external",
+      "label": "Inference endpoints",
+      "sublabel": "Local / approved frontier",
+      "pos": [
+        310,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "backend",
+      "label": "Isolated testing agent",
+      "sublabel": "Hermes first \u00b7 OpenClaw later",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "toolbroker",
+      "type": "security",
+      "label": "Tool policy broker",
+      "sublabel": "Typed actions \u00b7 permit checks",
+      "pos": [
+        310,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "Disposable tool runner",
+      "sublabel": "VM \u00b7 constrained scanners",
+      "pos": [
+        580,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "network",
+      "type": "security",
+      "label": "Target network policy",
+      "sublabel": "DNS \u00b7 IP \u00b7 method \u00b7 destination",
+      "pos": [
+        850,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "pyrit",
+      "type": "backend",
+      "label": "PyRIT evaluation",
+      "sublabel": "Targets \u00b7 attacks \u00b7 scorers",
+      "pos": [
+        40,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "database",
+      "label": "Protected evidence",
+      "sublabel": "Collector outside agent control",
+      "pos": [
+        310,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "review",
+      "type": "security",
+      "label": "Independent review",
+      "sublabel": "Confirm impact \u00b7 human decision",
+      "pos": [
+        580,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    },
+    {
+      "id": "targets",
+      "type": "backend",
+      "label": "Isolated target range",
+      "sublabel": "Web / AI apps \u00b7 scoped staging",
+      "pos": [
+        850,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "propose",
+      "from": "agent",
+      "to": "toolbroker",
+      "label": "Propose action",
+      "variant": "default"
+    },
+    {
+      "id": "permit",
+      "from": "controller",
+      "to": "toolbroker",
+      "label": "Authorize",
+      "variant": "security"
+    },
+    {
+      "id": "execute",
+      "from": "toolbroker",
+      "to": "runner",
+      "label": "Typed execution",
+      "variant": "emphasis",
+      "labelDy": 25
+    },
+    {
+      "id": "egress",
+      "from": "runner",
+      "to": "network",
+      "label": "Scoped I/O",
+      "variant": "security"
+    },
+    {
+      "id": "test",
+      "from": "network",
+      "to": "targets",
+      "label": "Allowed traffic",
+      "variant": "security",
+      "labelDy": 65
+    },
+    {
+      "id": "modeluse",
+      "from": "agent",
+      "to": "models",
+      "label": "Inference",
+      "variant": "default"
+    },
+    {
+      "id": "model-route",
+      "from": "models",
+      "to": "inference",
+      "label": "Approved routing",
+      "variant": "default"
+    },
+    {
+      "id": "capture",
+      "from": "toolbroker",
+      "to": "evidence",
+      "label": "Decision / action log",
+      "variant": "dashed",
+      "labelDy": 65
+    },
+    {
+      "id": "verify",
+      "from": "evidence",
+      "to": "review",
+      "label": "Review evidence",
+      "variant": "default"
+    },
+    {
+      "id": "evaluate",
+      "from": "pyrit",
+      "to": "toolbroker",
+      "label": "Brokered targets",
+      "variant": "default"
+    },
+    {
+      "id": "pyrit-results",
+      "from": "pyrit",
+      "to": "evidence",
+      "label": "Prompts / scores",
+      "variant": "dashed",
+      "labelDy": 25
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Proposed, not deployed",
+      "items": [
+        "Management, agent, execution, target and inference boundaries are distinct.",
+        "Installed tooling does not establish runtime integration or VM isolation."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Two assurance services",
+      "items": [
+        "Conventional application assessment and full AI application testing.",
+        "PyRIT evaluations also require brokered targets, scoring and verification."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Authority stays outside the model",
+      "items": [
+        "Controller grants permits to policy services; agents cannot approve scope.",
+        "Protected collection and human verification support release decisions."
+      ]
+    }
+  ]
+}

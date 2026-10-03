@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 CISO Capability View",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1110,
+      530
+    ]
+  },
+  "components": [
+    {
+      "id": "sponsor",
+      "type": "frontend",
+      "label": "CISO sponsor",
+      "sublabel": "Mandate \u00b7 risk appetite",
+      "pos": [
+        30,
+        55
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "govern",
+      "type": "security",
+      "label": "Governance / scope",
+      "sublabel": "Owners \u00b7 bounded work",
+      "pos": [
+        30,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "models",
+      "type": "security",
+      "label": "Model / data control",
+      "sublabel": "Local or approved API",
+      "pos": [
+        250,
+        55
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "agents",
+      "type": "backend",
+      "label": "Agent workbench",
+      "sublabel": "Replaceable harnesses",
+      "pos": [
+        250,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "execution",
+      "type": "security",
+      "label": "Execution isolation",
+      "sublabel": "Independent enforcement",
+      "pos": [
+        470,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "range",
+      "type": "backend",
+      "label": "Test / evaluation",
+      "sublabel": "Fixtures \u00b7 reset \u00b7 scoring",
+      "pos": [
+        690,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "database",
+      "label": "Evidence / assurance",
+      "sublabel": "Protected action records",
+      "pos": [
+        690,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "decision",
+      "type": "frontend",
+      "label": "Verified decisions",
+      "sublabel": "Release \u00b7 fix \u00b7 risk owner",
+      "pos": [
+        910,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "mandate",
+      "from": "sponsor",
+      "to": "govern",
+      "label": "Sponsor",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "scope",
+      "from": "govern",
+      "to": "agents",
+      "label": "Scope",
+      "variant": "security"
+    },
+    {
+      "id": "inference",
+      "from": "agents",
+      "to": "models",
+      "label": "Data rules",
+      "variant": "security"
+    },
+    {
+      "id": "propose",
+      "from": "agents",
+      "to": "execution",
+      "label": "Propose",
+      "variant": "default"
+    },
+    {
+      "id": "bounded",
+      "from": "execution",
+      "to": "range",
+      "label": "Bounded tests",
+      "variant": "emphasis",
+      "labelDy": 57
+    },
+    {
+      "id": "capture",
+      "from": "range",
+      "to": "evidence",
+      "label": "Collect",
+      "variant": "dashed",
+      "labelDy": 24
+    },
+    {
+      "id": "review",
+      "from": "evidence",
+      "to": "decision",
+      "label": "Verify",
+      "variant": "emphasis"
+    }
+  ],
+  "boundaries": [],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Three assurance mandates",
+      "items": [
+        "Secure AI applications; govern autonomous agents.",
+        "Measure security workflow value against a manual baseline."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Accountable continuation",
+      "items": [
+        "Sponsor funds the pilot; asset owners approve scope.",
+        "Independent verification informs release and remediation."
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Proposed capability",
+      "items": [
+        "Synthetic lab first; staging has a separate approval gate.",
+        "No deployment or safety certification is implied."
+      ]
+    }
+  ]
+}

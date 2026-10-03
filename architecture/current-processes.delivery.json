@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/lab/architecture/current-processes.architecture.json",
+  "output": "/Users/venky/work/preprod/lab/architecture/current-processes.html",
+  "specification": {
+    "sha256": "8f38edcfe9559f4f02f6f8426768858551d58e47ba5e508a33f9cbadabcfc357",
+    "bytes": 4676
+  },
+  "artifact": {
+    "sha256": "432cd5a6c3d5a09eac725d60d0be08803e7cc6b19004fd73e71accdc5cff8b4b",
+    "bytes": 711915
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

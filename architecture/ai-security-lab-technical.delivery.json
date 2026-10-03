@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-technical.architecture.json",
+  "output": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-technical.html",
+  "specification": {
+    "sha256": "82dbe858a85c277e71e70c2ad61226abe8c69156dadd4dc148314f5a0cbef8d3",
+    "bytes": 7088
+  },
+  "artifact": {
+    "sha256": "a319e87efa207e52f1e343c93ff9c8f406a0238f125c4deff9fc137bd708a11b",
+    "bytes": 722935
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

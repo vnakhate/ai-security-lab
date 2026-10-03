@@ -1,0 +1,74 @@
+[
+  {
+    "schemaVersion": 1,
+    "ok": true,
+    "command": "deliver",
+    "type": "architecture",
+    "input": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-ciso.architecture.json",
+    "output": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-ciso.html",
+    "specification": {
+      "sha256": "19df3d85b57fc1ddb3ab405f7ed28d482f3ac1f22f0c80e7b1a396eeeca5fdd6",
+      "bytes": 3990
+    },
+    "artifact": {
+      "sha256": "27399591deb510ab15a28fb13e270aa34a6f8e932f8da47ff638078a9cd7fcb0",
+      "bytes": 709054
+    },
+    "validation": {
+      "checksPassed": 9,
+      "checkCount": 9,
+      "compositionProfile": "showcase",
+      "compositionStatus": "pass",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "ok": true,
+    "command": "deliver",
+    "type": "architecture",
+    "input": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-governance.architecture.json",
+    "output": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-governance.html",
+    "specification": {
+      "sha256": "34d9511d0ba8a45d1dc4258a836017feaaa44123825455638d4cd7e487645541",
+      "bytes": 4481
+    },
+    "artifact": {
+      "sha256": "4e9bd3675c84b1fc35d37054853596ba32e4a1fca2543e66fef6bdf2f2f986f8",
+      "bytes": 711678
+    },
+    "validation": {
+      "checksPassed": 9,
+      "checkCount": 9,
+      "compositionProfile": "showcase",
+      "compositionStatus": "pass",
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  {
+    "schemaVersion": 1,
+    "ok": true,
+    "command": "deliver",
+    "type": "architecture",
+    "input": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-technical.architecture.json",
+    "output": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-technical.html",
+    "specification": {
+      "sha256": "82dbe858a85c277e71e70c2ad61226abe8c69156dadd4dc148314f5a0cbef8d3",
+      "bytes": 7088
+    },
+    "artifact": {
+      "sha256": "a319e87efa207e52f1e343c93ff9c8f406a0238f125c4deff9fc137bd708a11b",
+      "bytes": 722935
+    },
+    "validation": {
+      "checksPassed": 9,
+      "checkCount": 9,
+      "compositionProfile": "showcase",
+      "compositionStatus": "pass",
+      "errors": 0,
+      "warnings": 0
+    }
+  }
+]

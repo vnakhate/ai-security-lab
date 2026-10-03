@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/lab/architecture/system-canvas.architecture.json",
+  "output": "/Users/venky/work/preprod/lab/architecture/system-canvas.html",
+  "specification": {
+    "sha256": "ccaf259bea940df8e83d00637a205db7e570769176fec514ec720127e464f1dd",
+    "bytes": 6282
+  },
+  "artifact": {
+    "sha256": "5b80c99bd3787a0b577904d178113f86dddbed487ba3af30b47e5adbd5444c61",
+    "bytes": 719365
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

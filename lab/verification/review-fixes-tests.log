@@ -1,0 +1,50 @@
+test_ai_transport_uses_model_and_application_effects (test_application.ApplicationTests.test_ai_transport_uses_model_and_application_effects) ... ok
+test_authenticated_native_application_and_effects (test_application.ApplicationTests.test_authenticated_native_application_and_effects) ... ok
+test_budget_preflight_sends_nothing (test_harness.HarnessTests.test_budget_preflight_sends_nothing) ... ok
+test_evidence_tampering_detected (test_harness.HarnessTests.test_evidence_tampering_detected) ... ok
+test_expired_changed_scope_and_changed_code_approvals_denied (test_harness.HarnessTests.test_expired_changed_scope_and_changed_code_approvals_denied) ... ok
+test_fixed_and_vulnerable_ground_truth (test_harness.HarnessTests.test_fixed_and_vulnerable_ground_truth) ... ok
+test_fixed_suite_evidence_and_uncovered_categories (test_harness.HarnessTests.test_fixed_suite_evidence_and_uncovered_categories) ... ok
+test_manifest_rejects_bad_limits_and_unapproved_tests (test_harness.HarnessTests.test_manifest_rejects_bad_limits_and_unapproved_tests) ... ok
+test_missing_ai_instrumentation_is_inconclusive (test_harness.HarnessTests.test_missing_ai_instrumentation_is_inconclusive) ... ok
+test_refusing_all_legitimate_ai_tasks_invalidates_baseline (test_harness.HarnessTests.test_refusing_all_legitimate_ai_tasks_invalidates_baseline) ... ok
+test_response_types_and_campaign_owned_expectations (test_harness.HarnessTests.test_response_types_and_campaign_owned_expectations) ... ok
+test_scope_rejects_external_hosts_and_malformed_endpoints (test_harness.HarnessTests.test_scope_rejects_external_hosts_and_malformed_endpoints) ... ok
+test_stop_budget_path_and_time_enforced (test_harness.HarnessTests.test_stop_budget_path_and_time_enforced) ... ok
+test_transport_failure_preserves_incomplete_evidence (test_harness.HarnessTests.test_transport_failure_preserves_incomplete_evidence) ... ok
+test_vulnerable_suite_reports_reproduced_failures (test_harness.HarnessTests.test_vulnerable_suite_reports_reproduced_failures) ... ok
+test_http_fixture_campaign (test_http.HTTPTests.test_http_fixture_campaign) ... ok
+test_local_model_assistance_cannot_expand_scope (test_http.HTTPTests.test_local_model_assistance_cannot_expand_scope) ... ok
+test_oversized_response_is_saved_bounded_and_not_scored (test_http.HTTPTests.test_oversized_response_is_saved_bounded_and_not_scored) ... ok
+test_pyrit_export_preserves_json_input_and_categories (test_http.HTTPTests.test_pyrit_export_preserves_json_input_and_categories) ... ok
+test_redirect_is_saved_and_never_followed (test_http.HTTPTests.test_redirect_is_saved_and_never_followed) ... ok
+test_slow_response_cannot_extend_absolute_deadline (test_http.HTTPTests.test_slow_response_cannot_extend_absolute_deadline) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 4.342s
+
+OK
+test_check_only_never_collects (test_launcher.LauncherTests.test_check_only_never_collects) ... ok
+test_collector_failure_exit_is_preserved (test_launcher.LauncherTests.test_collector_failure_exit_is_preserved) ... ok
+test_completed_collection (test_launcher.LauncherTests.test_completed_collection) ... ok
+test_validation_failure_never_collects (test_launcher.LauncherTests.test_validation_failure_never_collects) ... ok
+test_changed_expired_and_invalid_scopes_denied (test_scope.ScopeTests.test_changed_expired_and_invalid_scopes_denied) ... ok
+test_expiry_time_and_request_limits_before_next_request (test_scope.ScopeTests.test_expiry_time_and_request_limits_before_next_request) ... ok
+test_missing_scope_or_target_sends_nothing (test_scope.ScopeTests.test_missing_scope_or_target_sends_nothing) ... ok
+test_app_403_not_attributed_to_edge (test_waf_check.CollectorTests.test_app_403_not_attributed_to_edge) ... ok
+test_bad_input_rejected (test_waf_check.CollectorTests.test_bad_input_rejected) ... ok
+test_benign_vendor_and_reference_text (test_waf_check.CollectorTests.test_benign_vendor_and_reference_text) ... ok
+test_detailed_analysis_preserves_response_and_duplicate_headers (test_waf_check.CollectorTests.test_detailed_analysis_preserves_response_and_duplicate_headers) ... ok
+test_exact_path_evidence_and_curl_constraints (test_waf_check.CollectorTests.test_exact_path_evidence_and_curl_constraints) ... ok
+test_failed_run_has_analysis_and_untested_coverage (test_waf_check.CollectorTests.test_failed_run_has_analysis_and_untested_coverage) ... ok
+test_failure_stops_and_returns_nonzero (test_waf_check.CollectorTests.test_failure_stops_and_returns_nonzero) ... ok
+test_only_approved_probes_execute_and_exclusions_remain_visible (test_waf_check.CollectorTests.test_only_approved_probes_execute_and_exclusions_remain_visible) ... ok
+test_process_timeout_is_incomplete (test_waf_check.CollectorTests.test_process_timeout_is_incomplete) ... ok
+test_rate_limit_and_server_error_stop (test_waf_check.CollectorTests.test_rate_limit_and_server_error_stop) ... ok
+test_redirecting_or_blocked_control_stops (test_waf_check.CollectorTests.test_redirecting_or_blocked_control_stops) ... ok
+test_reflection_is_not_app_proof (test_waf_check.CollectorTests.test_reflection_is_not_app_proof) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 3.673s
+
+OK

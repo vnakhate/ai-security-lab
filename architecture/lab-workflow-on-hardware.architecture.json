@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Test workflow across the proposed physical lab",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1030,
+      490
+    ],
+    "views": [
+      {
+        "id": "approve",
+        "label": "Approve and start",
+        "focus": [
+          "operator",
+          "control",
+          "runner"
+        ],
+        "note": "You approve the scope. The proposed control service permits a typed test action."
+      },
+      {
+        "id": "test",
+        "label": "Run the test",
+        "focus": [
+          "runner",
+          "firewall",
+          "target"
+        ],
+        "note": "The runner sends an approved request. The firewall routes it to the target VM."
+      },
+      {
+        "id": "model",
+        "label": "Call the local model",
+        "focus": [
+          "target",
+          "model"
+        ],
+        "note": "An AI target calls the model through the firewall. Ordinary web tests do not need this path."
+      },
+      {
+        "id": "proof",
+        "label": "Keep and review proof",
+        "focus": [
+          "runner",
+          "firewall",
+          "collector",
+          "operator"
+        ],
+        "note": "The runner submits records. You review responses, application audit events, and state effects."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "operator",
+      "type": "frontend",
+      "label": "You \u00b7 Mac",
+      "sublabel": "Approve / review",
+      "tag": "VLAN 10",
+      "pos": [
+        30,
+        190
+      ],
+      "size": [
+        140,
+        70
+      ]
+    },
+    {
+      "id": "control",
+      "type": "security",
+      "label": "Control service",
+      "sublabel": "Checks scope + identity",
+      "tag": "VLAN 10",
+      "pos": [
+        285,
+        190
+      ],
+      "size": [
+        150,
+        70
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "Runner VM",
+      "sublabel": "Harness + test tools",
+      "tag": "VLAN 20",
+      "pos": [
+        550,
+        110
+      ],
+      "size": [
+        150,
+        70
+      ]
+    },
+    {
+      "id": "target",
+      "type": "backend",
+      "label": "Target VM",
+      "sublabel": "Application + SQLite",
+      "tag": "VLAN 40",
+      "pos": [
+        825,
+        110
+      ],
+      "size": [
+        150,
+        70
+      ]
+    },
+    {
+      "id": "firewall",
+      "type": "security",
+      "label": "Physical firewall",
+      "sublabel": "Routes allowed traffic",
+      "tag": "DEFAULT DENY",
+      "pos": [
+        550,
+        350
+      ],
+      "size": [
+        150,
+        70
+      ]
+    },
+    {
+      "id": "model",
+      "type": "backend",
+      "label": "Local model API",
+      "sublabel": "Linux + GPU + Ollama",
+      "tag": "VLAN 30",
+      "pos": [
+        825,
+        350
+      ],
+      "size": [
+        150,
+        70
+      ]
+    },
+    {
+      "id": "collector",
+      "type": "database",
+      "label": "Evidence collector",
+      "sublabel": "Protected records",
+      "tag": "VLAN 50",
+      "pos": [
+        285,
+        350
+      ],
+      "size": [
+        150,
+        70
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "CONTROL / EVIDENCE MACHINE",
+      "wraps": [
+        "control",
+        "collector"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "TEST HOST \u00b7 Proxmox \u00b7 separate guest VMs",
+      "wraps": [
+        "runner",
+        "target"
+      ],
+      "pad": 20
+    },
+    {
+      "kind": "region",
+      "label": "INFERENCE MACHINE",
+      "wraps": [
+        "model"
+      ],
+      "pad": 20
+    }
+  ],
+  "connections": [
+    {
+      "id": "approval",
+      "from": "operator",
+      "to": "control",
+      "label": "approve scope",
+      "variant": "security"
+    },
+    {
+      "id": "dispatch",
+      "from": "control",
+      "to": "runner",
+      "label": "permit action",
+      "variant": "security"
+    },
+    {
+      "id": "test-request",
+      "from": "runner",
+      "to": "firewall",
+      "label": "send test",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "test-route",
+      "from": "firewall",
+      "to": "target",
+      "label": "route test",
+      "variant": "emphasis"
+    },
+    {
+      "id": "target-inference",
+      "from": "target",
+      "to": "model",
+      "label": "call via firewall",
+      "variant": "dashed",
+      "labelDy": 24
+    },
+    {
+      "id": "evidence-route",
+      "from": "firewall",
+      "to": "collector",
+      "label": "submit records"
+    },
+    {
+      "id": "review-records",
+      "from": "collector",
+      "to": "operator",
+      "label": "review proof"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Proposed deployment",
+      "items": [
+        "Service and VM boundaries remain pending.",
+        "Current Broker is a class inside the harness."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "How to read the paths",
+      "items": [
+        "All traffic between VLANs passes through the firewall.",
+        "The switch carries VLANs. Cabling and return packets are omitted."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "One experiment",
+      "items": [
+        "Check Alice\u2019s own record, then Bob\u2019s record.",
+        "The runner scores responses. You check the saved proof."
+      ]
+    }
+  ]
+}

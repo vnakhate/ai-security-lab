@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/lab/architecture/lab-workflow-on-hardware.architecture.json",
+  "output": "/Users/venky/work/preprod/lab/architecture/lab-workflow-on-hardware.html",
+  "specification": {
+    "sha256": "8b2aaafb1fd074e324918724252dd90fcf9105fc0cfb17fbe3bc06128e0d1ed9",
+    "bytes": 5426
+  },
+  "artifact": {
+    "sha256": "f77dddab568c79d84f8674ed483cc7e73207b2b46ad82a1ce7bbfad7cb103562",
+    "bytes": 711980
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

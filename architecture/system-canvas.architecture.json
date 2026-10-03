@@ -1,0 +1,312 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 Implemented System",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1060,
+      520
+    ]
+  },
+  "components": [
+    {
+      "id": "operator",
+      "type": "frontend",
+      "label": "Operator",
+      "sublabel": "CLI \u00b7 local attestation",
+      "pos": [
+        40,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    },
+    {
+      "id": "approval",
+      "type": "security",
+      "label": "Campaign scope",
+      "sublabel": "Source \u00b7 purpose \u00b7 expiry",
+      "pos": [
+        310,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    },
+    {
+      "id": "fixtures",
+      "type": "backend",
+      "label": "Calibration fixtures",
+      "sublabel": "12 deterministic cases",
+      "pos": [
+        580,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    },
+    {
+      "id": "model",
+      "type": "external",
+      "label": "Local model endpoint",
+      "sublabel": "Chat completions \u00b7 loopback",
+      "pos": [
+        850,
+        45
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "PENDING CALIBRATION"
+    },
+    {
+      "id": "pilot",
+      "type": "backend",
+      "label": "Campaign runner",
+      "sublabel": "Fresh fixed / vulnerable apps",
+      "pos": [
+        40,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "VERIFIED WEB PILOT"
+    },
+    {
+      "id": "broker",
+      "type": "security",
+      "label": "Request broker",
+      "sublabel": "Scope \u00b7 caps \u00b7 deadlines",
+      "pos": [
+        310,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    },
+    {
+      "id": "adapter",
+      "type": "backend",
+      "label": "Native API adapter",
+      "sublabel": "Private synthetic sessions",
+      "pos": [
+        580,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    },
+    {
+      "id": "application",
+      "type": "backend",
+      "label": "Application range",
+      "sublabel": "Authenticated API \u00b7 AI / RAG",
+      "pos": [
+        850,
+        220
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "WEB VERIFIED \u00b7 AI CONTRACT"
+    },
+    {
+      "id": "waf",
+      "type": "security",
+      "label": "WAF assessment",
+      "sublabel": "Separate scope \u00b7 paced curl",
+      "pos": [
+        40,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "OFFLINE VERIFIED"
+    },
+    {
+      "id": "evidence",
+      "type": "database",
+      "label": "Campaign evidence",
+      "sublabel": "Raw events \u00b7 hashes \u00b7 reports",
+      "pos": [
+        310,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    },
+    {
+      "id": "verification",
+      "type": "security",
+      "label": "Acceptance checks",
+      "sublabel": "Replay \u00b7 audit \u00b7 SQLite read",
+      "pos": [
+        580,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "40 REGRESSION TESTS"
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "Application state",
+      "sublabel": "SQLite \u00b7 audit \u00b7 model logs",
+      "pos": [
+        850,
+        410
+      ],
+      "size": [
+        170,
+        70
+      ],
+      "tag": "IMPLEMENTED"
+    }
+  ],
+  "connections": [
+    {
+      "id": "authorize",
+      "from": "operator",
+      "to": "approval",
+      "label": "Review scope",
+      "variant": "security"
+    },
+    {
+      "id": "start",
+      "from": "operator",
+      "to": "pilot",
+      "label": "Start pilot",
+      "variant": "default",
+      "labelDy": 55
+    },
+    {
+      "id": "approval-check",
+      "from": "approval",
+      "to": "broker",
+      "label": "Validate",
+      "variant": "security",
+      "labelDy": 55
+    },
+    {
+      "id": "execute",
+      "from": "pilot",
+      "to": "broker",
+      "label": "Controls + replay",
+      "variant": "emphasis"
+    },
+    {
+      "id": "native",
+      "from": "broker",
+      "to": "adapter",
+      "label": "Approved POST",
+      "variant": "security",
+      "labelDy": 25
+    },
+    {
+      "id": "api",
+      "from": "adapter",
+      "to": "application",
+      "label": "Bearer session",
+      "variant": "emphasis"
+    },
+    {
+      "id": "simulate",
+      "from": "broker",
+      "to": "fixtures",
+      "label": "Fixture mode",
+      "variant": "default"
+    },
+    {
+      "id": "inference",
+      "from": "application",
+      "to": "model",
+      "label": "Inference",
+      "variant": "dashed"
+    },
+    {
+      "id": "persist",
+      "from": "application",
+      "to": "state",
+      "label": "State + logs",
+      "variant": "default",
+      "labelDy": 65
+    },
+    {
+      "id": "record",
+      "from": "broker",
+      "to": "evidence",
+      "label": "Requests / responses",
+      "variant": "dashed",
+      "labelDy": 65
+    },
+    {
+      "id": "integrity",
+      "from": "evidence",
+      "to": "verification",
+      "label": "Verify hashes",
+      "variant": "default"
+    },
+    {
+      "id": "independent",
+      "from": "verification",
+      "to": "state",
+      "label": "Read SQL + audit",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Measured implementation",
+      "items": [
+        "40 tests passed. Web range: four seeded defects reproduced.",
+        "Fixed range: zero false positives; database effects verified."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Integration and review pending",
+      "items": [
+        "AI HTTP contract tested with a mock; actual model run pending.",
+        "PyRIT seed export works; campaigns and human comparison remain pending."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Authority and isolation limits",
+      "items": [
+        "WAF uses separate explicit scope; external collection was not run.",
+        "VM isolation, signed approvals and protected evidence storage are proposed."
+      ]
+    }
+  ]
+}

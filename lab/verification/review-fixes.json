@@ -1,0 +1,31 @@
+{
+  "source_sha256": "392adfa766bbc73b5ed47ceb757d85cfba6a3956ee3a545a4bd39f7defdc1fe7",
+  "regression_tests": 40,
+  "regression_result": "passed",
+  "test_log": "review-fixes-tests.log",
+  "authenticated_application_pilot": "/Users/venky/work/preprod/lab/lab/runs/pilot-chtilktx",
+  "web_campaigns": [
+    {
+      "profile": "fixed",
+      "complete": true,
+      "findings": 0,
+      "state_checks": true,
+      "ground_truth": true
+    },
+    {
+      "profile": "vulnerable",
+      "complete": true,
+      "findings": 4,
+      "state_checks": true,
+      "ground_truth": true
+    }
+  ],
+  "pyrit_version": "1.1.0",
+  "pyrit_dataset_seeds_accepted": 8,
+  "pyrit_campaign_execution": "not run",
+  "actual_model_calibration": "pending; ports 1234 and 11434 refused connections",
+  "model_http_contract": "mock endpoint tested",
+  "manual_comparison": "not measured",
+  "external_assessments": "none",
+  "os_isolation": "not implemented"
+}

@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AI Security Lab \u2014 Technical Trust Boundaries",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1110,
+      530
+    ]
+  },
+  "components": [
+    {
+      "id": "control",
+      "type": "security",
+      "label": "Campaign authority",
+      "sublabel": "Scope \u00b7 permits \u00b7 budgets",
+      "pos": [
+        250,
+        55
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "backend",
+      "label": "Isolated agent",
+      "sublabel": "Hermes first; OpenClaw later",
+      "pos": [
+        250,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "security",
+      "label": "Tool policy broker",
+      "sublabel": "Typed actions \u00b7 permit check",
+      "pos": [
+        470,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "backend",
+      "label": "Disposable executor",
+      "sublabel": "VM \u00b7 constrained scanners",
+      "pos": [
+        690,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "egress",
+      "type": "security",
+      "label": "Network enforcement",
+      "sublabel": "DNS \u00b7 IP \u00b7 redirects \u00b7 deny",
+      "pos": [
+        910,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "targets",
+      "type": "backend",
+      "label": "Isolated target range",
+      "sublabel": "Juice Shop + mock AI",
+      "pos": [
+        910,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "pyrit",
+      "type": "backend",
+      "label": "Separate PyRIT",
+      "sublabel": "Models \u00b7 agents \u00b7 AI targets",
+      "pos": [
+        470,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "evidence",
+      "type": "database",
+      "label": "Protected collector",
+      "sublabel": "Approvals \u00b7 I/O \u00b7 scores",
+      "pos": [
+        250,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "stop",
+      "type": "security",
+      "label": "Stop / revocation",
+      "sublabel": "Terminate \u00b7 block \u00b7 revoke",
+      "pos": [
+        690,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "broker",
+      "type": "security",
+      "label": "Model access broker",
+      "sublabel": "Keys \u00b7 redaction \u00b7 cost",
+      "pos": [
+        30,
+        235
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "local",
+      "type": "backend",
+      "label": "Local models",
+      "sublabel": "Pinned open weights",
+      "pos": [
+        30,
+        55
+      ],
+      "size": [
+        160,
+        66
+      ]
+    },
+    {
+      "id": "frontier",
+      "type": "external",
+      "label": "Frontier endpoints",
+      "sublabel": "Approved provider APIs",
+      "pos": [
+        30,
+        415
+      ],
+      "size": [
+        160,
+        66
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "task",
+      "from": "control",
+      "to": "agent",
+      "label": "Task",
+      "variant": "default",
+      "labelDy": 24
+    },
+    {
+      "id": "authority",
+      "from": "control",
+      "to": "gate",
+      "label": "Permit",
+      "variant": "security"
+    },
+    {
+      "id": "propose",
+      "from": "agent",
+      "to": "gate",
+      "label": "Propose",
+      "variant": "default",
+      "route": "straight",
+      "labelAt": [
+        490,
+        316
+      ]
+    },
+    {
+      "id": "exec",
+      "from": "gate",
+      "to": "runner",
+      "label": "Validated",
+      "variant": "security"
+    },
+    {
+      "id": "network",
+      "from": "runner",
+      "to": "egress",
+      "label": "Scoped I/O",
+      "variant": "security"
+    },
+    {
+      "id": "target",
+      "from": "egress",
+      "to": "targets",
+      "label": "Allowed",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "evaluation",
+      "from": "pyrit",
+      "to": "agent",
+      "label": "Test input",
+      "variant": "default"
+    },
+    {
+      "id": "result",
+      "from": "pyrit",
+      "to": "evidence",
+      "label": "Scores",
+      "variant": "dashed",
+      "labelAt": [
+        440,
+        495
+      ]
+    },
+    {
+      "id": "output",
+      "from": "agent",
+      "to": "evidence",
+      "label": "Events",
+      "variant": "dashed",
+      "labelDy": 24
+    },
+    {
+      "id": "infer",
+      "from": "agent",
+      "to": "broker",
+      "label": "Inference",
+      "variant": "default"
+    },
+    {
+      "id": "private",
+      "from": "broker",
+      "to": "local",
+      "label": "Local",
+      "variant": "default"
+    },
+    {
+      "id": "remote",
+      "from": "broker",
+      "to": "frontier",
+      "label": "TLS",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "stop-runner",
+      "from": "stop",
+      "to": "runner",
+      "label": "Terminate",
+      "variant": "security"
+    },
+    {
+      "id": "stop-network",
+      "from": "stop",
+      "to": "egress",
+      "label": "Block",
+      "variant": "security"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "Agent workload",
+      "wraps": [
+        "agent"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Evaluation workload",
+      "wraps": [
+        "pyrit"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Execution network",
+      "wraps": [
+        "runner"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Target network",
+      "wraps": [
+        "targets"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Management authority",
+      "wraps": [
+        "control"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Trusted policy",
+      "wraps": [
+        "gate"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Independent evidence",
+      "wraps": [
+        "evidence"
+      ],
+      "pad": 18
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Authority bypasses agent memory",
+      "items": [
+        "Controller issues permits directly to the tool broker.",
+        "Stop revokes campaign capabilities and provider access."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Brokered evaluation and evidence",
+      "items": [
+        "PyRIT target/scorer access uses approved model/tool adapters.",
+        "Collector receives authority, broker, runner and model traces."
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Proposed boundaries",
+      "items": [
+        "All target traffic crosses network enforcement.",
+        "PyRIT 1.0.1 design reference; installed version is 1.1.0."
+      ]
+    }
+  ]
+}

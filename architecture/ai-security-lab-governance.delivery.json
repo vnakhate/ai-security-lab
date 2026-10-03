@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-governance.architecture.json",
+  "output": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-governance.html",
+  "specification": {
+    "sha256": "34d9511d0ba8a45d1dc4258a836017feaaa44123825455638d4cd7e487645541",
+    "bytes": 4481
+  },
+  "artifact": {
+    "sha256": "4e9bd3675c84b1fc35d37054853596ba32e4a1fca2543e66fef6bdf2f2f986f8",
+    "bytes": 711678
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

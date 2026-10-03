@@ -1,0 +1,17 @@
+{
+  "visualReview": "completed",
+  "inspected": [
+    "1440x900 light",
+    "2048x1320 dark"
+  ],
+  "interactionChecks": [
+    "zoom in",
+    "zoom out",
+    "focused test view"
+  ],
+  "notes": [
+    "Physical machine boundaries are legible.",
+    "The diagram marks deployment as proposed.",
+    "All cross-VLAN traffic passes through the firewall. Cabling and return packets are omitted."
+  ]
+}

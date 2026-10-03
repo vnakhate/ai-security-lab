@@ -1,0 +1,126 @@
+{
+  "violations": [
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 13,
+      "col": 288,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are proposed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 33,
+      "col": 138,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "obtain",
+      "message": "'obtain' and 'retrieve' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 37,
+      "col": 111,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "corrected",
+      "message": "'correct' and 'fix' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 55,
+      "col": 26,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "Confirms",
+      "message": "'confirm' and 'verify' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 70,
+      "col": 29,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "altered",
+      "message": "'alter' and 'change' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 107,
+      "col": 13,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "checks",
+      "message": "'check' and 'verify' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 136,
+      "col": 7,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are proposed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 142,
+      "col": 347,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are deployed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 155,
+      "col": 211,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is installed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 184,
+      "col": 320,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "is restricted",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 223,
+      "col": 110,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are proposed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 229,
+      "col": 102,
+      "rule": "synonym-rotation",
+      "level": "advisory-free",
+      "match": "validated",
+      "message": "'validate' and 'verify' name the same action. Pick one and use it every time."
+    },
+    {
+      "file": "ai-security-lab-proposal.md",
+      "line": 368,
+      "col": 7,
+      "rule": "passive-voice",
+      "level": "advisory",
+      "match": "are proposed",
+      "message": "Possible passive voice. Name the actor and use an active verb, unless the actor is unknown or irrelevant."
+    }
+  ],
+  "count": 13,
+  "hard_count": 6,
+  "baseline": 0,
+  "words": 5528,
+  "per_100_words": 0.2
+}

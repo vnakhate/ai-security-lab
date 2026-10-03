@@ -1,0 +1,10 @@
+{
+  "regression_tests": 45,
+  "regression_result": "passed",
+  "test_log": "calibration-tests.log",
+  "prepared_plan": "../runs/calibration-0ydpbq2x/plan.json",
+  "actual_model_execution": "not run; numeric loopback model endpoints at ports 1234 and 11434 refused connections",
+  "human_security_acceptance": "pending",
+  "manual_baseline": "not measured",
+  "scope": "Repeatable AI calibration workflow; no new isolation service"
+}

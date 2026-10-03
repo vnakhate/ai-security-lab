@@ -1,0 +1,67 @@
+{
+  "scope": "Current process architecture and a separate, undeployed target design",
+  "current_implementation": [
+    {
+      "claim": "The shell launcher selects either harness or WAF execution; WAF never goes through harness Broker.",
+      "source": "lab/run-lab.sh",
+      "line": 4
+    },
+    {
+      "claim": "Broker, application translation, fixture adapter, scoring and evidence logging are functions in the harness process.",
+      "source": "lab/harness.py",
+      "line": 134
+    },
+    {
+      "claim": "assist calls a local planning endpoint through Broker and only saves selected catalog IDs for review.",
+      "source": "lab/harness.py",
+      "line": 449
+    },
+    {
+      "claim": "The native application adapter attaches private synthetic sessions and translates catalog requests.",
+      "source": "lab/application_adapter.py",
+      "line": 21
+    },
+    {
+      "claim": "run_pilot starts the application server as a subprocess, calls harness in-process, and later reads state and audit files.",
+      "source": "lab/run_pilot.py",
+      "line": 22
+    },
+    {
+      "claim": "The target application directly calls its configured local model; there is no management model broker on this path.",
+      "source": "lab/application_server.py",
+      "line": 36
+    },
+    {
+      "claim": "Retrieval is simple SQLite-backed synthetic tenant retrieval, not a deployed vector database or external RAG service.",
+      "source": "lab/application_server.py",
+      "line": 88
+    },
+    {
+      "claim": "WAF Python validates exact target and scope then starts bounded curl subprocesses and writes consolidated evidence.",
+      "source": "lab/waf-assessment/waf_check.py",
+      "line": 79
+    }
+  ],
+  "proposed_lab": {
+    "source": "ai-security-lab-proposal.md",
+    "line": 185,
+    "claims": [
+      "Trusted controller, model access broker, typed tool broker and independent isolation are proposed.",
+      "Inference endpoints aggregate local service and approved frontier APIs; provider access is routed by the model broker.",
+      "PyRIT target requests must use approved brokered adapters.",
+      "Installed tools are inventory, not executed campaign components.",
+      "OpenClaw, signed approvals, VM/network containment and protected evidence collection are not implemented in the local harness."
+    ]
+  },
+  "corrections": [
+    "Separated process architecture from workflow functions.",
+    "Added the distinct planner and target-inference paths.",
+    "Connected WAF execution within its own view.",
+    "Removed the implication of a standalone authenticated approval or independently protected evidence service.",
+    "Separated the proposed lab from current implementation."
+  ],
+  "known_limits": [
+    "This is an architectural summary; arrows show primary dependencies rather than every read/write.",
+    "Human independent review and actual-model calibration remain pending."
+  ]
+}

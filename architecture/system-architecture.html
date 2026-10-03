@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Security Lab Architecture</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#172039;font:14px system-ui,sans-serif}header{padding:12px 20px;border-bottom:1px solid #d7ddeb;display:flex;align-items:center;gap:18px;flex-wrap:wrap}h1{font-size:17px;margin:0}nav{display:flex;gap:6px;flex-wrap:wrap}button{padding:9px 14px;border:1px solid #c7cfdf;border-radius:8px;background:#fff;color:#273650;cursor:pointer;font:inherit}button[aria-selected="true"]{background:#164c9b;color:#fff;border-color:#164c9b}a{color:#164c9b}.status{margin-left:auto;font-size:12px}iframe{display:block;width:100%;height:calc(100dvh - 66px);border:0;background:#f5f7fb}@media(max-width:850px){header{gap:10px}.status{margin-left:0}iframe{height:calc(100dvh - 132px)}}
+</style>
+</head>
+<body>
+<header><h1>AI Security Lab</h1><nav role="tablist" aria-label="Architecture views">
+<button role="tab" aria-selected="true" data-page="current-processes.html">Current implementation</button>
+<button role="tab" aria-selected="false" data-page="waf-processes.html">WAF path</button>
+<button role="tab" aria-selected="false" data-page="proposed-system.html">Proposed lab</button>
+</nav><a class="status" href="architecture-evidence.json" target="_blank" rel="noopener">Source evidence</a></header>
+<iframe title="Current implementation architecture canvas" src="current-processes.html"></iframe>
+<script>
+const frame=document.querySelector('iframe');
+for(const button of document.querySelectorAll('button[data-page]'))button.addEventListener('click',()=>{
+ for(const other of document.querySelectorAll('button[data-page]'))other.setAttribute('aria-selected',String(other===button));
+ frame.src=button.dataset.page;frame.title=button.textContent+' architecture canvas';
+});
+</script>
+</body></html>

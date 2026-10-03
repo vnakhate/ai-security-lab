@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-ciso.architecture.json",
+  "output": "/Users/venky/work/preprod/waf/architecture/ai-security-lab-ciso.html",
+  "specification": {
+    "sha256": "19df3d85b57fc1ddb3ab405f7ed28d482f3ac1f22f0c80e7b1a396eeeca5fdd6",
+    "bytes": 3990
+  },
+  "artifact": {
+    "sha256": "27399591deb510ab15a28fb13e270aa34a6f8e932f8da47ff638078a9cd7fcb0",
+    "bytes": 709054
+  },
+  "validation": {
+    "checksPassed": 9,
+    "checkCount": 9,
+    "compositionProfile": "showcase",
+    "compositionStatus": "pass",
+    "errors": 0,
+    "warnings": 0
+  }
+}

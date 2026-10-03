@@ -1,0 +1,84 @@
+{
+  "evidence": "/Users/venky/work/preprod/lab/lab/runs/pilot-chtilktx",
+  "campaigns": [
+    {
+      "outcomes_match_ground_truth": true,
+      "track": "web",
+      "profile": "fixed",
+      "complete": true,
+      "exit_code": 0,
+      "elapsed_seconds": 0.012396000000080676,
+      "requests": 12,
+      "audit_records": 12,
+      "independent_state_checks_passed": true,
+      "findings": 0,
+      "inconclusive": 0,
+      "known_fixture_misses": null,
+      "false_positives": 0,
+      "model_execution": "none",
+      "manual_baseline": "not measured",
+      "human_review_effort": "pending human review",
+      "provider_cost": "no external provider calls; local compute cost not measured",
+      "campaign": "/Users/venky/work/preprod/lab/lab/runs/pilot-chtilktx/web-fixed/campaign-20261003T065356Z-g5p0e16y",
+      "application_state": {
+        "exports": [
+          "admin"
+        ],
+        "orders": [
+          [
+            "paid",
+            1,
+            1
+          ],
+          [
+            "unpaid",
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "outcomes_match_ground_truth": true,
+      "track": "web",
+      "profile": "vulnerable",
+      "complete": true,
+      "exit_code": 1,
+      "elapsed_seconds": 0.012255542000275454,
+      "requests": 12,
+      "audit_records": 12,
+      "independent_state_checks_passed": true,
+      "findings": 4,
+      "inconclusive": 0,
+      "known_fixture_misses": 0,
+      "false_positives": null,
+      "model_execution": "none",
+      "manual_baseline": "not measured",
+      "human_review_effort": "pending human review",
+      "provider_cost": "no external provider calls; local compute cost not measured",
+      "campaign": "/Users/venky/work/preprod/lab/lab/runs/pilot-chtilktx/web-vulnerable/campaign-20261003T065356Z-_8yhpoan",
+      "application_state": {
+        "exports": [
+          "admin",
+          "alice",
+          "alice"
+        ],
+        "orders": [
+          [
+            "paid",
+            1,
+            1
+          ],
+          [
+            "unpaid",
+            0,
+            1
+          ]
+        ]
+      }
+    }
+  ],
+  "ai_calibration": "pending local model endpoint",
+  "human_independent_review": "pending",
+  "external_targets": "none"
+}
