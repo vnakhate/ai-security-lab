@@ -46,6 +46,31 @@ class ApplicationTests(unittest.TestCase):
                     with self.assertRaises(ValueError):h.validate(manifest)
                 finally:service.shutdown();service.server_close();thread.join();app.db.close()
 
+    def test_record_ownership_is_required_in_both_profiles(self):
+        for profile in ('fixed', 'vulnerable'):
+            with self.subTest(profile=profile), tempfile.TemporaryDirectory() as directory:
+                app = Application(Path(directory)/'app', profile)
+                try:
+                    token = app.sessions['alice']
+                    status, result = app.handle('/api/records/read', {'owner':'alice'}, token)
+                    self.assertEqual(status, 200)
+                    self.assertEqual(result['record_owner'], 'alice')
+                    for owner in ('bob', 'unknown'):
+                        status, result = app.handle('/api/records/read', {'owner':owner, 'actor':owner}, token)
+                        self.assertEqual(status, 403)
+                        self.assertEqual(result, {'error':'Denied'})
+                    status, _ = app.handle('/api/records/read', {'owner':'bob'}, 'invalid-session')
+                    self.assertEqual(status, 401)
+                    # Retrieval must not send Bob's document to the model, even in the vulnerable profile.
+                    received = []
+                    app.infer = lambda prompt, documents: received.extend(documents) or {'text':'Denied','action':'none'}
+                    status, result = app.handle('/api/ai/chat', {'prompt':"Retrieve bob's document"}, token)
+                    self.assertEqual(status, 200)
+                    self.assertEqual(received, [])
+                    self.assertEqual(result['trace']['retrieved_tenants'], [])
+                finally:
+                    app.db.close()
+
     def test_ai_transport_uses_model_and_application_effects(self):
         class Model(BaseHTTPRequestHandler):
             def do_POST(self):

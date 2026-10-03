@@ -1,0 +1,32 @@
+test_ai_transport_uses_model_and_application_effects (test_application.ApplicationTests.test_ai_transport_uses_model_and_application_effects) ... ok
+test_authenticated_native_application_and_effects (test_application.ApplicationTests.test_authenticated_native_application_and_effects) ... ok
+test_record_ownership_is_required_in_both_profiles (test_application.ApplicationTests.test_record_ownership_is_required_in_both_profiles) ... ok
+test_completed_transport_does_not_accept_model (test_calibration.CalibrationTests.test_completed_transport_does_not_accept_model) ... ok
+test_consistent_fixed_failure_is_failure_but_vulnerable_is_observation (test_calibration.CalibrationTests.test_consistent_fixed_failure_is_failure_but_vulnerable_is_observation) ... ok
+test_external_endpoint_is_rejected_before_execution (test_calibration.CalibrationTests.test_external_endpoint_is_rejected_before_execution) ... ok
+test_incomplete_inconclusive_unstable_and_missing_logs_fail (test_calibration.CalibrationTests.test_incomplete_inconclusive_unstable_and_missing_logs_fail) ... ok
+test_prepare_never_starts_targets (test_calibration.CalibrationTests.test_prepare_never_starts_targets) ... ok
+test_budget_preflight_sends_nothing (test_harness.HarnessTests.test_budget_preflight_sends_nothing) ... ok
+test_evidence_tampering_detected (test_harness.HarnessTests.test_evidence_tampering_detected) ... ok
+test_expired_changed_scope_and_changed_code_approvals_denied (test_harness.HarnessTests.test_expired_changed_scope_and_changed_code_approvals_denied) ... ok
+test_fixed_and_vulnerable_ground_truth (test_harness.HarnessTests.test_fixed_and_vulnerable_ground_truth) ... ok
+test_fixed_suite_evidence_and_uncovered_categories (test_harness.HarnessTests.test_fixed_suite_evidence_and_uncovered_categories) ... ok
+test_manifest_rejects_bad_limits_and_unapproved_tests (test_harness.HarnessTests.test_manifest_rejects_bad_limits_and_unapproved_tests) ... ok
+test_missing_ai_instrumentation_is_inconclusive (test_harness.HarnessTests.test_missing_ai_instrumentation_is_inconclusive) ... ok
+test_refusing_all_legitimate_ai_tasks_invalidates_baseline (test_harness.HarnessTests.test_refusing_all_legitimate_ai_tasks_invalidates_baseline) ... ok
+test_response_types_and_campaign_owned_expectations (test_harness.HarnessTests.test_response_types_and_campaign_owned_expectations) ... ok
+test_scope_rejects_external_hosts_and_malformed_endpoints (test_harness.HarnessTests.test_scope_rejects_external_hosts_and_malformed_endpoints) ... ok
+test_stop_budget_path_and_time_enforced (test_harness.HarnessTests.test_stop_budget_path_and_time_enforced) ... ok
+test_transport_failure_preserves_incomplete_evidence (test_harness.HarnessTests.test_transport_failure_preserves_incomplete_evidence) ... ok
+test_vulnerable_suite_reports_reproduced_failures (test_harness.HarnessTests.test_vulnerable_suite_reports_reproduced_failures) ... ok
+test_http_fixture_campaign (test_http.HTTPTests.test_http_fixture_campaign) ... ok
+test_local_model_assistance_cannot_expand_scope (test_http.HTTPTests.test_local_model_assistance_cannot_expand_scope) ... ok
+test_oversized_response_is_saved_bounded_and_not_scored (test_http.HTTPTests.test_oversized_response_is_saved_bounded_and_not_scored) ... ok
+test_pyrit_export_preserves_json_input_and_categories (test_http.HTTPTests.test_pyrit_export_preserves_json_input_and_categories) ... ok
+test_redirect_is_saved_and_never_followed (test_http.HTTPTests.test_redirect_is_saved_and_never_followed) ... ok
+test_slow_response_cannot_extend_absolute_deadline (test_http.HTTPTests.test_slow_response_cannot_extend_absolute_deadline) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 4.360s
+
+OK

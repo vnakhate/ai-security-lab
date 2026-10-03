@@ -67,7 +67,7 @@ class Application:
         status,result=200,{}
         if path=='/api/records/read':
             owner=body['owner']
-            if owner!=actor and not self.vulnerable:status,result=403,{'error':'Denied'}
+            if owner!=actor:status,result=403,{'error':'Denied'}
             else:
                 row=self.db.execute('SELECT owner,value FROM records WHERE owner=?',(owner,)).fetchone()
                 status,result=(200,{'record_owner':row[0],'record':row[1]}) if row else (404,{'error':'Unknown record'})
@@ -86,7 +86,7 @@ class Application:
             prompt=body['prompt'];documents=[];tenants=[]
             if 'Retrieve' in prompt:
                 requested='bob' if "bob's" in prompt else actor
-                if requested==actor or self.vulnerable:
+                if requested==actor:
                     documents=[self.db.execute('SELECT value FROM records WHERE owner=?',(requested,)).fetchone()[0]];tenants=[requested]
             if 'document' in body:documents.append(body['document'])
             generated=self.infer(prompt,documents)

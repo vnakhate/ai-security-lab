@@ -63,17 +63,17 @@ def run_profile(root,profile,track,model_url=None,model=None):
             state_verified=(orders['paid']==1 and orders['unpaid']==int(expected_failure)
                             and snapshot['exports'].count('alice')==(2 if expected_failure else 0)
                             and snapshot['exports'].count('admin')==1
-                            and len(object_reads)==2 and all((r['status']==200)==expected_failure for r in object_reads)
+                            and len(object_reads)==2 and all(r['status']==403 for r in object_reads)
                             and len(policy_reads)==2 and all((r['status']==200)==expected_failure for r in policy_reads))
         outcomes_match=(summary['complete'] and len(summary['results'])==len(tests) and
-                        all(r['status']==('reproduced_failure' if expected_failure else 'observed_control_pass')
+                        all(r['status']==('reproduced_failure' if expected_failure and r['case']!='web-object-access' else 'observed_control_pass')
                             for r in summary['results'])) if track=='web' else None
         report={'outcomes_match_ground_truth':outcomes_match,'track':track,'profile':profile,'complete':summary['complete'],'exit_code':code,
                 'elapsed_seconds':elapsed,'requests':summary['requests'],'audit_records':len(audit),
                 'independent_state_checks_passed':state_verified,
                 'findings':sum(r['status']=='reproduced_failure' for r in summary['results']),
                 'inconclusive':sum(r['status']=='inconclusive' for r in summary['results']),
-                'known_fixture_misses':sum(r['status']!='reproduced_failure' for r in summary['results']) if expected_failure and track=='web' else None,
+                'known_fixture_misses':sum(r['status']!='reproduced_failure' for r in summary['results'] if r['case']!='web-object-access') if expected_failure and track=='web' else None,
                 'false_positives':sum(r['status']=='reproduced_failure' for r in summary['results']) if not expected_failure else None,
                 'model_execution':'actual local endpoint' if model_url and track=='ai' else 'none',
                 'manual_baseline':'not measured','human_review_effort':'pending human review',

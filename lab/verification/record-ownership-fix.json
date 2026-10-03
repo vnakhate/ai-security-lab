@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "regression_tests": 27,
+  "scope": "authenticated synthetic localhost application",
+  "model_calls": "none in pilot; AI retrieval checked with in-process mock",
+  "pilot": "/Users/venky/work/preprod/lab/lab/runs/pilot-h8ucay45",
+  "checks": [
+    {
+      "profile": "fixed",
+      "own_record_status": 200,
+      "bob_record_statuses": [
+        403,
+        403
+      ],
+      "audit": "/Users/venky/work/preprod/lab/lab/runs/pilot-h8ucay45/web-fixed/application/audit.jsonl",
+      "audit_sha256": "e7636205f5fcc60e9c875edf322a3657950a780428e24f910a8e73f82c79d354"
+    },
+    {
+      "profile": "vulnerable",
+      "own_record_status": 200,
+      "bob_record_statuses": [
+        403,
+        403
+      ],
+      "audit": "/Users/venky/work/preprod/lab/lab/runs/pilot-h8ucay45/web-vulnerable/application/audit.jsonl",
+      "audit_sha256": "b68d4fcd3e3a9e0f9e79c29eb748631a5c8f789f9d987e35b168053c2f23c135"
+    }
+  ],
+  "remaining_seeded_web_defects_in_vulnerable_profile": 3,
+  "human_independent_review": "pending"
+}

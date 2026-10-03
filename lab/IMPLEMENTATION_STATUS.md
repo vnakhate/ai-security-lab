@@ -2,6 +2,10 @@
 
 Updated 3 October 2026. Version 0.1.0 is a local calibration harness with an authenticated application range and a separate WAF collector. The complete governed lab remains proposed.
 
+## Record ownership fix
+
+The authenticated application now requires record ownership in both profiles. Alice cannot read Bob’s record through the native API or synthetic AI retrieval. The vulnerable application profile retains three other seeded web defects. Historical four-defect receipts below describe the earlier code. In-process deterministic fixtures remain deliberate negative controls. The [ownership-fix receipt](verification/record-ownership-fix.json) records 27 passing tests and fresh authenticated pilot results.
+
 ## Current architecture
 
 The [zoomable architecture document](../architecture/system-architecture.html) provides separate views for current implementation, WAF execution and future infrastructure. [Source evidence](../architecture/architecture-evidence.json) ties current components to code. The earlier `system-canvas.html` is superseded.
