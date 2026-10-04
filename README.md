@@ -90,3 +90,9 @@ The wrappers resolve their directory dynamically. Eight installed Python environ
 Read [harness instructions](lab/README.md), [adapter contracts](lab/ADAPTERS.md), [implementation status](lab/IMPLEMENTATION_STATUS.md), and the [program proposal](ai-security-lab-proposal.md).
 
 The [consolidated architecture canvas](architecture/consolidated-lab-architecture.html) shows the proposed minimal lab, local and external model access, corporate WAF target, and evidence storage.
+
+The [implementation plan](docs/IMPLEMENTATION_PLAN.md) defines milestones, dependencies, and acceptance checks before building the operational lab.
+
+The [OWASP tool integration document](docs/OWASP_TOOL_INTEGRATION.md) maps tools, agents, and models to proposed integration points, test objectives, and evidence requirements.
+
+Open the [OWASP integration visual explainer](architecture/owasp-tool-integration.html) for the controlled tool interfaces, risk mappings, and evidence examples.

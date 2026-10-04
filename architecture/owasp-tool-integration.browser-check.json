@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "width": 1280,
+      "colorScheme": "light",
+      "scrollWidth": 1280,
+      "controls": "passed"
+    },
+    {
+      "width": 1280,
+      "colorScheme": "dark",
+      "scrollWidth": 1280,
+      "controls": "passed"
+    },
+    {
+      "width": 390,
+      "colorScheme": "light",
+      "scrollWidth": 390,
+      "controls": "passed"
+    },
+    {
+      "width": 390,
+      "colorScheme": "dark",
+      "scrollWidth": 390,
+      "controls": "passed"
+    }
+  ],
+  "javascriptErrors": []
+}
