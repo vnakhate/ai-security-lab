@@ -16,6 +16,10 @@ The pilot launches fresh authenticated local applications, runs vulnerable and f
 
 ## Architecture and documentation
 
+Open the [minimal proposed architecture](architecture/minimal-lab-architecture.html) for the two-operator lab, shared UI/CLI engine, isolated runner, and tool coverage. This supersedes the earlier three-machine deployment proposal.
+
+The [current lab requirements](ai-security-lab-proposal.md) define a minimal two-operator setup, shared UI/CLI execution, and explicit dispositions for [all supplied tools](pentest-tools/manifests/lab-tool-coverage.json).
+
 Explore the [test workflow across the physical lab](architecture/lab-workflow-on-hardware.html) on a zoomable Archify canvas. Machine boundaries and focused views connect the software steps to the proposed hardware.
 
 The [physical lab plan](architecture/physical-lab-plan.html) and [software lab plan](architecture/software-lab-plan.html) describe the proposed dedicated setup, software roles, controls, and acceptance checks.
@@ -84,3 +88,5 @@ source ./pentest-tools/env.sh
 The wrappers resolve their directory dynamically. Eight installed Python environments were repaired offline after the move. `pentest-tools/manifests/relocation.json` records the repair; original installation manifests and assessment evidence retain their historical paths. If the installation moves again, run `python3 pentest-tools/relocate.py` before using its Python environments. The repair does not download packages or launch scanners.
 
 Read [harness instructions](lab/README.md), [adapter contracts](lab/ADAPTERS.md), [implementation status](lab/IMPLEMENTATION_STATUS.md), and the [program proposal](ai-security-lab-proposal.md).
+
+The [consolidated architecture canvas](architecture/consolidated-lab-architecture.html) shows the proposed minimal lab, local and external model access, corporate WAF target, and evidence storage.

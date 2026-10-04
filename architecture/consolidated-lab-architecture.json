@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Proposed AI Security Lab \u2014 Consolidated Architecture",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1040,
+      530
+    ]
+  },
+  "components": [
+    {
+      "id": "operator-ui",
+      "type": "frontend",
+      "label": "Dashboard + CLI",
+      "sublabel": "Two operator clients",
+      "pos": [
+        25,
+        230
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "campaign-engine",
+      "type": "security",
+      "label": "Run engine",
+      "sublabel": "Scope \u00b7 limits \u00b7 stop",
+      "pos": [
+        225,
+        230
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "isolated-runner",
+      "type": "backend",
+      "label": "Tool runner",
+      "sublabel": "Accepted tool adapters",
+      "pos": [
+        435,
+        230
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "corporate-waf",
+      "type": "security",
+      "label": "Corporate WAF",
+      "sublabel": "Approved HTTPS target",
+      "pos": [
+        665,
+        230
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "corporate-site",
+      "type": "external",
+      "label": "Corporate website",
+      "sublabel": "Pages + approved APIs",
+      "pos": [
+        875,
+        230
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "site-services",
+      "type": "external",
+      "label": "Backend services",
+      "sublabel": "No direct test access",
+      "pos": [
+        875,
+        400
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "model-policy",
+      "type": "security",
+      "label": "Model access",
+      "sublabel": "Data policy \u00b7 relay \u00b7 keys",
+      "pos": [
+        225,
+        400
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "open-weight-runtime",
+      "type": "backend",
+      "label": "Open-weight models",
+      "sublabel": "Local inference service",
+      "pos": [
+        435,
+        400
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "cyber-model-api",
+      "type": "external",
+      "label": "Grok 3.7 Cyber",
+      "sublabel": "Operator-named API",
+      "pos": [
+        665,
+        400
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "evidence-index",
+      "type": "database",
+      "label": "SQLite run index",
+      "sublabel": "Run IDs \u00b7 state \u00b7 file links",
+      "pos": [
+        225,
+        60
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "evidence-backup",
+      "type": "database",
+      "label": "Separate backup",
+      "sublabel": "Recovery copy",
+      "pos": [
+        25,
+        60
+      ],
+      "size": [
+        135,
+        60
+      ]
+    },
+    {
+      "id": "evidence-files",
+      "type": "database",
+      "label": "Evidence files",
+      "sublabel": "Restricted run folders",
+      "pos": [
+        435,
+        60
+      ],
+      "size": [
+        135,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "One dedicated lab computer \u00b7 proposed",
+      "wraps": [
+        "campaign-engine",
+        "isolated-runner",
+        "model-policy",
+        "open-weight-runtime",
+        "evidence-index",
+        "evidence-files"
+      ],
+      "pad": 18
+    },
+    {
+      "kind": "security-group",
+      "label": "Disposable VM",
+      "wraps": [
+        "isolated-runner"
+      ],
+      "pad": 14
+    }
+  ],
+  "connections": [
+    {
+      "id": "ui-controls",
+      "from": "operator-ui",
+      "to": "campaign-engine",
+      "label": "Control"
+    },
+    {
+      "id": "dispatch-results",
+      "from": "campaign-engine",
+      "to": "isolated-runner",
+      "label": "Run / results"
+    },
+    {
+      "id": "target-traffic",
+      "from": "isolated-runner",
+      "to": "corporate-waf",
+      "label": "Scoped HTTPS"
+    },
+    {
+      "id": "waf-forwards",
+      "from": "corporate-waf",
+      "to": "corporate-site",
+      "label": "Forwards"
+    },
+    {
+      "id": "site-backends",
+      "from": "corporate-site",
+      "to": "site-services",
+      "label": "Calls",
+      "labelDy": 24
+    },
+    {
+      "id": "model-requests",
+      "from": "campaign-engine",
+      "to": "model-policy",
+      "label": "Model calls",
+      "labelDy": 24
+    },
+    {
+      "id": "local-inference",
+      "from": "model-policy",
+      "to": "open-weight-runtime",
+      "label": "Loopback"
+    },
+    {
+      "id": "external-inference",
+      "from": "model-policy",
+      "to": "cyber-model-api",
+      "label": "Approved API",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "bottom"
+    },
+    {
+      "id": "save-evidence",
+      "from": "campaign-engine",
+      "to": "evidence-index",
+      "label": "Saves"
+    },
+    {
+      "id": "backup-evidence",
+      "from": "evidence-index",
+      "to": "evidence-backup",
+      "label": "DB backup"
+    },
+    {
+      "id": "save-artifacts",
+      "from": "isolated-runner",
+      "to": "evidence-files",
+      "label": "Host copies",
+      "labelDy": -55
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Proposed controls",
+      "items": [
+        "One campaign at a time. Runner egress allows approved targets only.",
+        "Tools use a bounded model relay. Provider keys stay on the host."
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Model choices",
+      "items": [
+        "Local-only mode blocks external inference. No cloud fallback.",
+        "Grok API details need confirmation. A GPU host is a later option; no initial cluster."
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Coverage and evidence",
+      "items": [
+        "SQLite tracks runs. Restricted folders hold artifacts. Back up both stores.",
+        "Review correlates WAF and application logs. Responses return on each call path."
+      ]
+    }
+  ]
+}

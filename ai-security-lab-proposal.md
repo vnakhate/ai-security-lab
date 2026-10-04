@@ -1,5 +1,114 @@
 # AI Security Lab Proposal
 
+## Current requirements: minimal lab with UI, CLI, and tool coverage
+
+Updated 4 October 2026. This section takes precedence over the larger future architecture below.
+
+The lab serves two operators. Start with one dedicated computer, a disposable runner VM, a local model, and a private dashboard. Retain the Mac as the administration client. Add hardware only when measured workload or required isolation justifies it.
+
+The two acceptance goals are a calibrated local AI lab and an evidence-backed assessment of an authorized external WAF. Neither goal is complete. Existing local tests establish prototype behavior. Installed repositories do not establish campaign readiness.
+
+### One run engine for both interfaces
+
+The dashboard and CLI must use the same run engine. One local service and a small run index are sufficient initially. Do not create separate execution paths with different scope checks.
+
+The UI and CLI must support preparation, scope review, start, status, stop, evidence inspection, and report export. Run one campaign at a time initially. The dashboard must use named operator accounts and remain private. Scope approval must identify its reviewer.
+
+A run records its target, profile, operator, approved actions, limits, source versions, tool steps, artifacts, and stop reason. Completion means execution finished. It does not mean the target is secure.
+
+### Account for every supplied tool
+
+Every campaign must account for all supplied repositories and additional installed tools. The report must show each tool as selected, blocked, not applicable, or deferred. Each unselected tool needs a reason. A failed selected step must remain visible.
+
+A comprehensive profile must run every applicable, calibrated tool that its scope permits. Duplicate tools can supply comparison evidence. They must share one campaign budget. Tool count does not measure coverage.
+
+Methodology repositories contribute reviewed procedures and test cases. They do not require a fake scan step. Source scanners require source access. AI evaluators require an AI target. Origin and domain discovery require their own asset scope.
+
+The [tool coverage registry](pentest-tools/manifests/lab-tool-coverage.json) records all supplied repositories and additional tools. Historical installation manifests contain old paths. The registry checks the repositories at their current location.
+
+| Supplied repository | Intended contribution | Readiness or scope condition |
+|---|---|---|
+| strix | AI-assisted web/API assessment | Provider, sandbox, scoped adapter, and calibration pending. |
+| raptor | Code-assisted security investigation | Needs source and reviewed provider configuration. Adapter pending. |
+| shannon | AI-assisted web/API assessment | Check source requirements for the selected mode. Runtime and adapter pending. |
+| pentest-ai | AI-assisted investigation and verification | Provider compatibility, execution limits, and adapter pending. |
+| numasec | Security workflow orchestration | Could coordinate tools. It must not bypass the shared scope controls. |
+| cyberstrike | AI-assisted browser and security workflows | Browser, provider, and bounded execution checks pending. |
+| pyrit | AI application risk evaluation | Seed export exists. Target, attack, scorer, and execution adapters remain pending. |
+| hermes | General agent assistance | Candidate planner or reviewer. Not a standalone WAF scanner. |
+| whatwaf | WAF detection and bypass research | Review selected detection and bypass behavior before external use. |
+| wafw00f | WAF fingerprinting | Can send active detection requests. Include those requests in scope and budgets. |
+| 10x-pentest | Human-gated assessment methodology | Use applicable workflow stages. This repository is not an executable scanner. |
+| claude-bughunter | Assessment skills and investigation methods | Select and review applicable skills. Client registration remains pending. |
+| pi | General agent runtime | Candidate assistant runtime. Not a standalone WAF scanner. |
+| dns-history | Origin exposure investigation | Needs explicitly approved origin/discovery scope. A WAF URL alone does not authorize discovered IPs. |
+| pyrit-course | Training and AI test examples | Adapt examples to the installed PyRIT version. Not a production campaign runner. |
+
+Additional tools include the existing WAF collector, ProjectDiscovery httpx, Nuclei, Nmap, subfinder, Semgrep, CodeQL, Claude Code, curl, DNS utilities, and jq. Their dispositions and prerequisites appear in the registry.
+
+### Local and external model access
+
+Support local open-weight models and approved external model APIs through one model access module in the host service. Start with one local runtime adapter and one external provider adapter. Do not add a separate gateway server initially.
+
+Each campaign selects local-only or approved-external mode. Local-only mode must deny external model calls and automatic cloud fallback. External mode must record the provider, model ID, allowed data, limits, and reviewer. Credentials and session tokens must never enter model prompts.
+
+The host service owns provider keys. Runner tools use an authenticated, bounded relay and receive no keys. The relay enforces the campaign's provider, model, data, time, and cost policy. Tools must not call arbitrary providers directly.
+
+Start local inference as a separate host service on the dedicated lab computer. Limit memory and concurrency and measure interference with the runner. Separate service accounts do not provide independent GPU or failure isolation. Move to one dedicated GPU host when measured resource pressure or required isolation justifies it. Use a private authenticated endpoint accessible only through model access. A multi-host cluster is a later option for models that exceed one host or sustained concurrent demand.
+
+Maintain a model registry. Local entries record source, license, weight hash, quantization, runtime, and memory needs. External entries record endpoint, account access, model ID, retention terms, and allowed data. Calibrate each model and adapter before use. Model output remains advisory; the run engine retains scope and execution control.
+
+The operator identifies Grok 3.7 Cyber as the specialist external endpoint. Its exact API URL, model ID, access, and data terms require confirmation before integration. Public xAI documentation does not establish this specific endpoint. Compare accepted models with common approved cases and evidence. Record findings, false positives, latency, cost, and reviewer effort.
+
+### Tool adapter requirements
+
+1. Record the exact tool version and accepted arguments.
+2. Check the endpoint, method, accounts, and permitted actions against scope.
+3. Reject unsupported scope constraints before starting the tool.
+4. Run the tool in the disposable runner environment.
+5. Restrict network access independently of agent instructions.
+6. Apply campaign request, time, process, and model-cost limits across all steps.
+7. Preserve stdout, stderr, exit status, structured results, and partial evidence.
+8. Stop the process tree when the operator stops the campaign.
+9. Normalize findings without discarding the original tool artifacts.
+10. Check actual application impact before accepting a finding.
+
+An outer CLI wrapper alone cannot control an autonomous tool's internal requests. If an adapter cannot enforce a required limit, mark it blocked. A tool's claimed local-model compatibility does not establish compatibility with our chosen runtime. Check each provider contract separately.
+
+Use synthetic targets for startup and calibration checks. Promote an adapter only after it detects expected seeded failures and respects scope, limits, and stop controls. Do not start provider calls or external target tests during installation checks.
+
+### Comprehensive external WAF coverage
+
+The external WAF fronts a large corporate website. Model the target as approved pages and API routes behind the WAF, with backend services behind the website. Start with a small route set and expand in stages. A website URL does not authorize direct backend access or third-party testing.
+
+Record the hostname, route, method, input, session role, and expected result for each case. Coordinate the test window with the site owner. Correlate request IDs with WAF and application logs. Use one request budget across tools and routes.
+
+See the [interactive minimal architecture explainer](architecture/minimal-lab-architecture.html) for the lab boundaries and campaign flow.
+
+The test plan must identify normal traffic, active fingerprinting, selected vulnerability checks, authenticated application workflows, and WAF/application log correlation. Include request methods, body formats, and encodings that the target actually uses.
+
+The existing WAF collector covers bounded unauthenticated GET-query observations only. Authenticated sessions, POST/JSON, browser workflows, and richer WAF tests need separate accepted adapters. A homepage URL cannot establish coverage for application endpoints.
+
+Use source tools when source is available. Add AI application tests only when the target contains an AI application. Origin exposure checks need explicit asset scope. Discovered hosts must never become approved targets automatically.
+
+For each test objective, record the expected behavior, selected tool, actual requests, WAF decision, application effects, and review outcome. Show objectives with no supporting adapter as coverage gaps. A blocked normal-use baseline stops active follow-up until the cause is resolved.
+
+### Minimal operating sequence
+
+1. Review the target endpoint and access requirements.
+2. Build the run index and read-only dashboard.
+3. Expose the existing WAF collector through the shared run engine.
+4. Add calibrated adapters for applicable deterministic tools.
+5. Add one reviewed AI assessment adapter.
+6. Evaluate the remaining supplied repositories and record their dispositions.
+7. Compare coverage and review effort against the manual baseline.
+
+The dashboard must show the tool matrix before launch and actual tool outcomes afterward. UI and CLI acceptance requires the same scope, run identifier, stop behavior, and saved evidence.
+
+No tool integration, dashboard deployment, or external campaign occurred during this requirements update.
+
+---
+
 Draft for Venky and a CISO audience, updated 3 October 2026. This proposal starts with business decisions and risk ownership. It then explains the operating model, capability architecture and technical design. The recommended pilot uses synthetic tests within approved limits. Policy controls agent actions. Evidence determines whether the pilot can continue.
 
 This document is a proposal, not authorization to provision infrastructure, purchase compute, configure credentials or run assessments. The proposed infrastructure and governance controls remain design requirements until implemented and tested. The current local calibration capabilities and their limits are identified separately below.

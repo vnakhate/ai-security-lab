@@ -1,0 +1,22 @@
+{
+  "diagramType": "architecture",
+  "validation": {
+    "checksPassed": 9,
+    "errors": 0,
+    "warnings": 0
+  },
+  "visualReview": "passed by inspection",
+  "screenshotsReviewed": [
+    "consolidated-lab-architecture.visual-check.1440x900.light.png"
+  ],
+  "specification": {
+    "path": "consolidated-lab-architecture.json",
+    "sha256": "496346afcb084ebc7f9ca420ba28de4062b1a1c43ba24ce12fc2f74548d23584",
+    "bytes": 6106
+  },
+  "artifact": {
+    "path": "consolidated-lab-architecture.html",
+    "sha256": "b8b7acc6d30244124d52b5871906cc63a357b5ffda3bc319030e2f9ab1dcd4d3",
+    "bytes": 718814
+  }
+}
