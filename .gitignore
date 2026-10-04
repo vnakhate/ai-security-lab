@@ -13,3 +13,5 @@ __pycache__/
 /lab/campaigns/
 /lab/waf-assessment/runs/
 /lab/waf-assessment/results/
+
+presentations/.build/
