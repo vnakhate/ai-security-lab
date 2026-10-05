@@ -96,3 +96,7 @@ The [implementation plan](docs/IMPLEMENTATION_PLAN.md) defines milestones, depen
 The [OWASP tool integration document](docs/OWASP_TOOL_INTEGRATION.md) maps tools, agents, and models to proposed integration points, test objectives, and evidence requirements.
 
 Open the [OWASP integration visual explainer](architecture/owasp-tool-integration.html) for the controlled tool interfaces, risk mappings, and evidence examples.
+
+The [web application testing presentation](presentations/output/web-app-ai-agent-testing.pptx) focuses on web/API assessment, with separate sections for AI applications and AI agents.
+
+The [external reviewer guide](docs/EXTERNAL_REVIEWER_GUIDE.md) explains review scope, source entry points, recorded evidence, local reproduction, and readiness decisions.

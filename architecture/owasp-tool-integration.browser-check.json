@@ -25,5 +25,21 @@
       "controls": "passed"
     }
   ],
-  "javascriptErrors": []
+  "javascriptErrors": [],
+  "testedProfiles": [
+    "web",
+    "ai",
+    "agent"
+  ],
+  "testedCases": [
+    "ownership",
+    "injection",
+    "agency",
+    "retrieval",
+    "output",
+    "approval",
+    "toolresponse",
+    "stop"
+  ],
+  "testDate": "2026-10-05"
 }

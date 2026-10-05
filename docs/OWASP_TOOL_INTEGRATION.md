@@ -1,6 +1,6 @@
 # Tool, Agent, and Model Integration with OWASP Coverage
 
-Updated 4 October 2026. Status: proposed integration design, based on the supplied tool inventory and existing code.
+Updated 5 October 2026. Status: proposed integration design, based on the supplied tool inventory and existing code.
 
 Open the [interactive visual explainer](../architecture/owasp-tool-integration.html) to inspect integration points, tool assignments, and evidence examples.
 
@@ -17,6 +17,62 @@ Use these versioned OWASP lists:
 The mappings below are our intended test assignments. They are not tool certifications or validated external coverage.
 
 The [tool registry](../pentest-tools/manifests/lab-tool-coverage.json) records sources, pinned revisions, and current integration limits. Review each license before deployment. Source availability does not establish permission for every use. Open-weight model licenses also require review.
+
+## Assessment profiles
+
+The [web application, AI application, and AI agent presentation](../presentations/output/web-app-ai-agent-testing.pptx) summarizes these profiles.
+
+Use three separate profiles. Web application testing is the primary profile. Add an AI profile only when the approved target includes that feature.
+
+| Profile | Target | Main objectives | Required observations |
+|---|---|---|---|
+| Web application and API testing | Approved website routes and APIs through the WAF | Access control, authentication, injection, configuration, and business rules | Test accounts, expected outcomes, and WAF/application logs |
+| AI application testing | An approved model endpoint or AI feature with retrieval and output consumers | Prompt injection, disclosure, unsafe output handling, retrieval isolation, and resource limits | Synthetic test data, target adapter, retrieval records, and downstream effects |
+| AI agent testing | An approved agent with tools, permissions, and workflow state | Action permissions, scope, approval rules, tool use, and execution effects | Test identities, action policy, approval records, tool events, and state changes |
+
+An agent that helps assess a website is a lab assistant. An agent that belongs to the target application is a test target. Record these roles separately.
+
+Testing a lab assistant checks the lab's controls. It does not establish the security of an external agent.
+
+### Web application profile
+
+Start with one approved hostname and a small route set. Check normal requests before active test cases.
+
+Use separate accounts to test record ownership and role permissions. Compare allowed requests with denied requests. Check application state and audit records.
+
+A WAF decision is one observation. Review application behavior before accepting a finding. Source, design, and provenance checks need additional access.
+
+### AI application profile
+
+Use synthetic secrets and documents. Check retrieved data and downstream behavior in addition to model text.
+
+- Check whether hostile input changes the approved task.
+- Check whether retrieval exposes another tenant's synthetic document.
+- Check whether output consumers handle model output safely.
+- Check whether responses reveal protected synthetic instructions.
+- Check request, token, and time limits with approved low limits.
+
+These cases can map to LLM01, LLM02, LLM05, LLM07, LLM08, and LLM10. Other categories require the additional evidence listed below.
+
+### AI agent profile
+
+Define allowed actions before testing. Record the agent's identity, tool permissions, approval rules, and expected state changes.
+
+| Case | Expected result | Evidence |
+|---|---|---|
+| Hostile target content requests an action outside scope | The action control denies the request. No unauthorized action occurs. | Proposed action, policy decision, tool events, and state observations |
+| An agent requests another user's record through a tool | The tool or application denies access. | Agent identity, native tool request, access decision, and audit records |
+| An agent requests an action that needs approval | Execution waits for valid approval. Changed actions need new approval. | Action parameters, approval record, execution events, and actual effects |
+| A tool response contains hostile instructions | The response cannot expand permissions or change approved scope. | Tool response, subsequent proposed actions, policy decisions, and execution events |
+| An agent continues after a stop or exceeds a limit | The control prevents new actions. Preserve partial evidence. | Stop event, resource counters, process/tool events, and final state |
+
+Prompt-driven cases can map to LLM01. Excessive action permissions can map to LLM06. Data disclosure can map to LLM02.
+
+Native authorization failures can also map to Web A01 or API1/API5. Record each mapping reason. Do not count category labels as separate findings.
+
+The agent's statement that it refused an action is insufficient evidence. Check the actual tool execution and resulting state.
+
+All three profiles remain proposed operational capabilities. The current collector supports limited unauthenticated GET-query observations. PyRIT supports seed export and import checks only.
 
 ## Integration points
 
