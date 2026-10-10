@@ -163,6 +163,10 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(waf_check.resolve_public_endpoint('http://1.1.1.1/a'),
                          ('1.1.1.1', '1.1.1.1', 80))
 
+    def test_resolve_refuses_ipv4_mapped_internal(self):
+        with self.assertRaises(waf_check.ScopeError):
+            waf_check.resolve_public_endpoint('http://[::ffff:169.254.169.254]/a')
+
 
 if __name__ == '__main__':
     os.umask(0o077)

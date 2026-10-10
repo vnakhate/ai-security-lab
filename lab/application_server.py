@@ -13,7 +13,9 @@ from urllib.parse import urlsplit
 from catalog import CANARY, SQLI_SECRET, decode_jwt
 
 def _append_jsonl(path, obj):
-    # Append one JSON line, refusing a pre-planted symlink at the path (O_NOFOLLOW).
+    # Append one JSON line. O_NOFOLLOW refuses a pre-planted symlink at the final
+    # path component; the parent dir is created 0700 by Application, so planting a
+    # symlink or hardlink there already requires local write access to that dir.
     fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_APPEND|os.O_NOFOLLOW,0o600)
     try:os.write(fd,(json.dumps(obj)+'\n').encode());os.fsync(fd)
     finally:os.close(fd)
