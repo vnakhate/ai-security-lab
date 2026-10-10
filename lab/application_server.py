@@ -8,6 +8,8 @@ import secrets
 import sqlite3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.client
+import urllib.request
+from urllib.parse import urlsplit
 from catalog import CANARY, SQLI_SECRET
 
 def _append_jsonl(path, obj):
@@ -86,6 +88,15 @@ class Application:
             else:
                 rows=[r[0] for r in self.db.execute("SELECT value FROM records WHERE owner=? AND value LIKE ?",(actor,'%'+term+'%'))]
             result={'results':rows}
+        elif path=='/api/fetch':
+            url=body['url']
+            if self.vulnerable:
+                # SSRF: fetches an attacker-controlled URL with no allowlist (http/https only).
+                if urlsplit(url).scheme not in ('http','https'):raise ValueError('Unsupported URL scheme')
+                with urllib.request.urlopen(url,timeout=5) as resp:resp.read(1024)
+                result={'fetched':True}
+            else:
+                result={'fetched':False,'error':'Outbound fetch not permitted'}
         elif path=='/api/exports':
             if actor!='admin' and not self.vulnerable:status,result=403,{'export_completed':False}
             else:self.db.execute('INSERT INTO exports VALUES(?)',(actor,));result={'export_completed':True}
