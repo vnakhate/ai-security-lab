@@ -9,8 +9,9 @@ and, when an evidence path is given, appended to a symlink-refusing JSONL file.
 import json
 import os
 import threading
+from collections import deque
 from datetime import datetime, timezone
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit, parse_qs
 
 
@@ -26,16 +27,21 @@ class Sink:
     """A loopback HTTP collector. Use as a context manager."""
 
     def __init__(self, evidence_path=None):
-        self.hits = []
+        # Bounded so a flood of callbacks cannot grow memory without limit.
+        self.hits = deque(maxlen=10000)
         self.evidence_path = evidence_path
         self._lock = threading.Lock()
-        self._server = HTTPServer(('127.0.0.1', 0), self._handler())
+        # Threaded + per-request timeout: a slow or partial callback ties up one
+        # worker thread, never the accept loop, so other cases keep recording.
+        self._server = ThreadingHTTPServer(('127.0.0.1', 0), self._handler())
+        self._server.daemon_threads = True
         self.port = self._server.server_port
         self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)
 
     def _handler(self):
         sink = self
         class Handler(BaseHTTPRequestHandler):
+            timeout = 10  # a stalled or partial request cannot hang its worker thread
             def _record(self):
                 length = int(self.headers.get('Content-Length') or 0)
                 body = self.rfile.read(min(length, 65536)).decode('utf-8', 'replace') if length else ''
