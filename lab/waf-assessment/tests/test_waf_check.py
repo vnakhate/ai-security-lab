@@ -48,7 +48,9 @@ class CollectorTests(unittest.TestCase):
         probes=env.pop('SCOPE_PROBES',None)
         make_scope(scope_path,**({'probes':probes.split(',')} if probes else {}))
         with patch.dict(os.environ, dict(env, PATH=str(root)), clear=True), \
-                patch('waf_check.time.sleep'), contextlib.redirect_stdout(io.StringIO()):
+                patch('waf_check.time.sleep'), \
+                patch('waf_check.socket.getaddrinfo', return_value=[(2, 1, 6, '', ('1.1.1.1', 443))]), \
+                contextlib.redirect_stdout(io.StringIO()):
             # Absolute interpreter avoids relying on PATH in fake curl's shebang.
             fake.write_text(MOCK_CURL.replace('/usr/bin/env python3', sys.executable))
             exit_code = waf_check.main(['https://example.invalid/api/search', '--output', str(evidence), '--scope',str(scope_path)])
@@ -149,6 +151,17 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(len(detailed['untested_probes']), 5)
         self.assertFalse(detailed['observations'][0]['response']['transfer_completed'])
         self.assertIn('mock connection failure', detailed['observations'][0]['curl_error'])
+
+    def test_resolve_refuses_internal_targets(self):
+        # Loopback, link-local/metadata, and RFC1918 targets are refused before any request.
+        for url in ('http://127.0.0.1/a', 'http://169.254.169.254/a', 'http://10.0.0.1/a',
+                    'http://192.168.1.1/a', 'http://[::1]/a'):
+            with self.subTest(url=url), self.assertRaises(waf_check.ScopeError):
+                waf_check.resolve_public_endpoint(url)
+
+    def test_resolve_allows_global_target_and_pins_ip(self):
+        self.assertEqual(waf_check.resolve_public_endpoint('http://1.1.1.1/a'),
+                         ('1.1.1.1', '1.1.1.1', 80))
 
 
 if __name__ == '__main__':

@@ -10,6 +10,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.client
 from catalog import CANARY
 
+def _append_jsonl(path, obj):
+    # Append one JSON line, refusing a pre-planted symlink at the path (O_NOFOLLOW).
+    fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_APPEND|os.O_NOFOLLOW,0o600)
+    try:os.write(fd,(json.dumps(obj)+'\n').encode());os.fsync(fd)
+    finally:os.close(fd)
+
 class Application:
     def __init__(self, directory, profile='fixed', model_url=None, model=None):
         self.directory=Path(directory);self.directory.mkdir(parents=True,exist_ok=True,mode=0o700)
@@ -30,8 +36,7 @@ class Application:
 
     def audit(self, row):
         self.sequence+=1
-        with (self.directory/'audit.jsonl').open('a') as f:
-            f.write(json.dumps({'sequence':self.sequence,**row,'state':self.snapshot()})+'\n');f.flush();os.fsync(f.fileno())
+        _append_jsonl(self.directory/'audit.jsonl',{'sequence':self.sequence,**row,'state':self.snapshot()})
 
     def infer(self, prompt, documents):
         if not self.model_url: raise ValueError('Actual local model endpoint is not configured')
@@ -56,8 +61,7 @@ class Application:
             content=json.loads(raw)['choices'][0]['message']['content']
             result=json.loads(content)
             if not isinstance(result,dict) or not isinstance(result.get('text'),str):raise ValueError('Model must return JSON text/action')
-            with (self.directory/'model-events.jsonl').open('a') as f:
-                f.write(json.dumps({'request':payload,'response':json.loads(raw)})+'\n')
+            _append_jsonl(self.directory/'model-events.jsonl',{'request':payload,'response':json.loads(raw)})
             return result
         finally:conn.close()
 
