@@ -63,7 +63,9 @@ class Sink:
             self.hits.append(record)
             if not self.evidence_path:
                 return
-            # Best-effort evidence, refusing a pre-planted symlink (O_NOFOLLOW).
+            # Best-effort evidence. O_NOFOLLOW refuses a symlink at the final path
+            # component; the evidence dir is operator-controlled, so a hostile
+            # symlink or hardlink there already requires local write access.
             try:
                 fd = os.open(self.evidence_path,
                              os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW, 0o600)

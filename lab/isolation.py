@@ -77,10 +77,27 @@ def build_run_argv(spec):
 
 
 REQUIRED_FLAGS = ("--read-only", "--cap-drop", "no-new-privileges")
+# Allowlist, not denylist: only these docker-run options may appear before the
+# image. Anything unnamed is refused, so escape vectors we did not enumerate
+# (--cap-add, --pid/--ipc/--uts=host, --device, --privileged[=true], arbitrary
+# bind mounts) are denied by default rather than slipping past a denylist.
+ALLOWED_FLAGS = {"--rm", "--network", "--user", "--read-only", "--tmpfs", "--cap-drop",
+                 "--security-opt", "--pids-limit", "--memory", "--cpus", "-v", "-w"}
+VALUE_FLAGS = {"--network", "--user", "--tmpfs", "--cap-drop", "--security-opt",
+               "--pids-limit", "--memory", "--cpus", "-v", "-w"}
 
 
 def validate_run_argv(argv):
-    """Assert a run invocation carries the confinement invariants. Fail-closed."""
+    """Assert a run invocation is the hardened profile and nothing else. Fail-closed."""
+    if argv[:2] != ["docker", "run"]:
+        raise IsolationUnavailable("not a docker run invocation")
+    i = 2
+    while i < len(argv) and argv[i].startswith("-"):
+        name = argv[i].split("=", 1)[0]
+        if name not in ALLOWED_FLAGS:
+            raise IsolationUnavailable(f"disallowed docker flag: {name}")
+        i += 2 if (name in VALUE_FLAGS and "=" not in argv[i]) else 1
+    # argv[i] onward is the image + target command, which are not docker flags.
     if "--user" not in argv:
         raise IsolationUnavailable("target must run as a non-root user")
     user = argv[argv.index("--user") + 1]
@@ -91,10 +108,13 @@ def validate_run_argv(argv):
     for flag in REQUIRED_FLAGS:
         if flag not in argv:
             raise IsolationUnavailable(f"missing confinement flag: {flag}")
-    if "--privileged" in argv:
-        raise IsolationUnavailable("privileged container denied")
-    if any("docker.sock" in part for part in argv):
-        raise IsolationUnavailable("docker socket mount denied")
+    # Every bind mount must land on /work; nothing may mount a host path elsewhere
+    # (this also refuses a docker.sock mount, whose target is never /work).
+    for idx, token in enumerate(argv):
+        if token == "-v":
+            parts = (argv[idx + 1] if idx + 1 < len(argv) else "").split(":")
+            if len(parts) < 2 or parts[1] != "/work":
+                raise IsolationUnavailable("bind mount must target /work only")
     return True
 
 

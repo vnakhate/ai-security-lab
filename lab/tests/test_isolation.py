@@ -64,6 +64,20 @@ class IsolationTests(unittest.TestCase):
         with patch('isolation.docker_available', return_value=True):
             self.assertTrue(isolation.require_isolation())
 
+    def test_allowlist_rejects_unnamed_escape_flags(self):
+        base = isolation.build_run_argv(_spec())
+        for bad in (['--cap-add', 'SYS_ADMIN'], ['--device', '/dev/kmsg'],
+                    ['--pid=host'], ['--ipc=host'], ['--privileged=true']):
+            argv = base[:2] + bad + base[2:]
+            with self.subTest(flag=bad[0]), self.assertRaises(IsolationUnavailable):
+                isolation.validate_run_argv(argv)
+
+    def test_bind_mount_must_target_work(self):
+        argv = isolation.build_run_argv(_spec())
+        argv[argv.index('-v') + 1] = '/:/host:rw'
+        with self.assertRaises(IsolationUnavailable):
+            isolation.validate_run_argv(argv)
+
 
 if __name__ == '__main__':
     unittest.main()

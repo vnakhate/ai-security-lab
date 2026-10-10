@@ -52,6 +52,10 @@ def resolve_public_endpoint(url):
         raise ScopeError(f"Target {host} does not resolve")
     for address in addresses:
         ip = ipaddress.ip_address(address)
+        # Unwrap IPv4-mapped IPv6 (::ffff:a.b.c.d) so a mapped internal address
+        # cannot read as global on interpreters predating the is_global fix.
+        if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped is not None:
+            ip = ip.ipv4_mapped
         if not ip.is_global or ip.is_multicast:
             raise ScopeError(f"Target {host} resolves to non-global address {address}")
     return sorted(addresses)[0], host, port
