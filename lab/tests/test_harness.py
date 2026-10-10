@@ -43,8 +43,8 @@ class HarnessTests(unittest.TestCase):
     def test_fixed_suite_evidence_and_uncovered_categories(self):
         code,run,summary=self.run_campaign("fixed")
         self.assertEqual(code,0); self.assertTrue(summary["complete"])
-        self.assertEqual(summary["requests"],36)
-        self.assertEqual(len(summary["results"]),12)
+        self.assertEqual(summary["requests"],3*len(CASES))
+        self.assertEqual(len(summary["results"]),len(CASES))
         self.assertEqual(h.read(run/"coverage.json")["LLM05:2026"]["scope"],"Not tested")
         with contextlib.redirect_stdout(io.StringIO()): h.verify(run)
         first=json.loads((run/"events.jsonl").read_text().splitlines()[1])

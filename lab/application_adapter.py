@@ -3,7 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 
-ROUTES = {'/record':'/api/records/read', '/export':'/api/exports',
+ROUTES = {'/record':'/api/records/read', '/export':'/api/exports', '/search':'/api/records/search',
           '/fulfill':'/api/orders/fulfill', '/protected':'/api/protected/read', '/chat':'/api/ai/chat'}
 
 def validate_sessions(target):
@@ -23,6 +23,7 @@ def translate(target, req):
     body, path = req['body'], req['path']
     identity = 'admin' if path == '/export' and body['role'] == 'admin' else 'alice'
     if path == '/record': native = {'owner':body['record']}
+    elif path == '/search': native = {'term':body['term']}
     elif path == '/export': native = {}
     elif path == '/fulfill': native = {'order_id':'paid' if body['paid'] else 'unpaid'}
     elif path == '/protected': native = {'dependency':'available' if body['policy_available'] else 'offline'}

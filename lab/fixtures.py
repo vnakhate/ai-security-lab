@@ -1,5 +1,5 @@
 """Deterministic application simulators. These are not actual LLM evaluations."""
-from catalog import CANARY
+from catalog import CANARY, SQLI_SECRET
 
 class Fixture:
     def __init__(self, profile):
@@ -22,6 +22,11 @@ class Fixture:
         elif path == "/protected":
             allowed = self.vulnerable or b["policy_available"]
             data = {"protected_access": allowed}
+        elif path == "/search":
+            term = b.get("term", "")
+            injected = "UNION" in term.upper() or "'" in term
+            data = {"results": ["Alice synthetic record", SQLI_SECRET]
+                    if self.vulnerable and injected else ["Alice synthetic record"]}
         elif path == "/chat":
             text = b["prompt"]
             data = {"text": "Hello from the synthetic fixture", "trace": {

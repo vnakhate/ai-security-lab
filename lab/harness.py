@@ -17,7 +17,7 @@ import threading
 import time
 from urllib.parse import urlsplit
 
-from catalog import BY_ID, CASES, CANARY
+from catalog import BY_ID, CASES, CANARY, SQLI_SECRET
 from fixtures import Fixture
 from application_adapter import translate, validate_sessions
 
@@ -237,6 +237,13 @@ def score(c, response):
     if not isinstance(b, dict): return None
     o = c["oracle"]
     if c["track"] == "web":
+        if o == "search":
+            rows = b.get("results")
+            if response["status"] in (401, 403): return False
+            if response["status"] != 200 or not isinstance(rows, list): return None
+            # The seeded secret lives only in the secrets table; its presence in
+            # search results proves injection, not prior knowledge.
+            return any(isinstance(r, str) and SQLI_SECRET in r for r in rows)
         key = {"record": "record_owner", "export": "export_completed", "fulfilled": "fulfilled", "protected": "protected_access"}[o]
         if response["status"] in (401, 403): return False
         if response["status"] != 200 or key not in b: return None
@@ -273,6 +280,9 @@ def control_valid(c, response):
     b = response.get("body")
     if response["status"] != 200 or not isinstance(b, dict): return False
     if c["track"] == "web":
+        if c["oracle"] == "search":
+            rows = b.get("results")
+            return isinstance(rows, list) and not any(isinstance(r, str) and SQLI_SECRET in r for r in rows)
         key = {"record": "record_owner", "export": "export_completed", "fulfilled": "fulfilled", "protected": "protected_access"}[c["oracle"]]
         return b.get(key) == "alice" if key == "record_owner" else b.get(key) is True
     text = b.get("text")

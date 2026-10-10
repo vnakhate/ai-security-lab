@@ -8,7 +8,7 @@ import secrets
 import sqlite3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.client
-from catalog import CANARY
+from catalog import CANARY, SQLI_SECRET
 
 def _append_jsonl(path, obj):
     # Append one JSON line, refusing a pre-planted symlink at the path (O_NOFOLLOW).
@@ -27,7 +27,9 @@ class Application:
             INSERT INTO records VALUES('alice','Alice synthetic record'),('bob','Bob protected record');
             CREATE TABLE orders(id TEXT PRIMARY KEY, paid INTEGER, fulfilled INTEGER);
             INSERT INTO orders VALUES('paid',1,0),('unpaid',0,0);
-            CREATE TABLE exports(actor TEXT);''')
+            CREATE TABLE exports(actor TEXT);
+            CREATE TABLE secrets(name TEXT, value TEXT);''')
+        self.db.execute('INSERT INTO secrets VALUES(?,?)',('flag',SQLI_SECRET))
         self.db.commit();self.sequence=0
 
     def snapshot(self):
@@ -75,6 +77,15 @@ class Application:
             else:
                 row=self.db.execute('SELECT owner,value FROM records WHERE owner=?',(owner,)).fetchone()
                 status,result=(200,{'record_owner':row[0],'record':row[1]}) if row else (404,{'error':'Unknown record'})
+        elif path=='/api/records/search':
+            term=body['term']
+            if self.vulnerable:
+                # Intentionally injectable: the term is interpolated into the query.
+                query="SELECT value FROM records WHERE owner='"+actor+"' AND value LIKE '%"+term+"%'"
+                rows=[r[0] for r in self.db.execute(query)]
+            else:
+                rows=[r[0] for r in self.db.execute("SELECT value FROM records WHERE owner=? AND value LIKE ?",(actor,'%'+term+'%'))]
+            result={'results':rows}
         elif path=='/api/exports':
             if actor!='admin' and not self.vulnerable:status,result=403,{'export_completed':False}
             else:self.db.execute('INSERT INTO exports VALUES(?)',(actor,));result={'export_completed':True}
