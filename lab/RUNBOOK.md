@@ -237,3 +237,27 @@ cd /Users/venky/work/preprod/lab/lab
 ```
 
 This command sends no target requests. WAF runs retain their own authorization requirements and baseline safety stop. Approval for an application/AI harness campaign does not grant approval for a WAF target.
+
+## Isolation substrate (U2)
+
+Real targets (a web app under test, a tool-calling agent, an MCP server) and any outward probing run confined, not in the harness process. The harness core and the tamper-evident evidence stay on the host; the target runs as a non-root, read-only, capability-dropped container with resource limits, attached only to a Docker `--internal` network. That network has no route off itself, so the target reaches the out-of-band sink and the co-located target on the same network and nothing else — no internet egress.
+
+`lab/isolation.py` builds and validates the invocation:
+
+- `build_network_argv(name)` creates the `--internal` network.
+- `build_run_argv(spec)` builds the hardened `docker run` (non-root user, `--read-only`, `--cap-drop ALL`, `no-new-privileges`, `--pids-limit`/`--memory`/`--cpus`, a single writable `/work` mount).
+- `validate_run_argv(argv)` refuses a root user, host network, `--privileged`, or a docker-socket mount.
+- `require_isolation()` fails closed: with no reachable Docker daemon it raises rather than let a real target run unconfined.
+
+Verify the live boundary once per machine (manual smoke check, not in `check.sh`):
+
+```sh
+docker network create --internal lab-oob-smoke
+# a container on an --internal network cannot reach the internet:
+docker run --rm --network lab-oob-smoke --user 65534:65534 --read-only \
+  --cap-drop ALL --security-opt no-new-privileges alpine \
+  sh -c 'wget -T3 -q -O- https://example.com || echo EGRESS_BLOCKED_OK'
+docker network rm lab-oob-smoke
+```
+
+Limits: this is process/namespace isolation via Docker, not a defense against kernel or hypervisor exploits. On macOS, Docker runs in its own VM, which adds a boundary but is not a substitute for a dedicated air-gapped host when a target is genuinely untrusted. Evidence integrity still depends on the host-side `verify()`; the target never gets write access to `lab/runs/`.
