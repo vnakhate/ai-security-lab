@@ -1,4 +1,5 @@
 """Deterministic application simulators. These are not actual LLM evaluations."""
+import urllib.request
 from catalog import CANARY, SQLI_SECRET, decode_jwt
 
 class Fixture:
@@ -36,6 +37,16 @@ class Fixture:
             if self.vulnerable and header.get("alg") == "none" and isinstance(payload.get("sub"), str) and payload["sub"]:
                 linked = payload["sub"]
             data = {"linked_as": linked, "accepted": True}
+        elif path == "/fetch":
+            if self.vulnerable:
+                # SSRF: the vulnerable profile fetches the attacker-supplied URL,
+                # which lands a callback at the out-of-band sink.
+                try:
+                    with urllib.request.urlopen(b.get("url", ""), timeout=5) as resp:
+                        resp.read(256)
+                except Exception:
+                    pass
+            data = {"fetched": self.vulnerable}
         elif path == "/chat":
             text = b["prompt"]
             data = {"text": "Hello from the synthetic fixture", "trace": {

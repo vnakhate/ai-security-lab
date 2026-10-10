@@ -35,6 +35,7 @@ class HarnessTests(unittest.TestCase):
 
     def test_fixed_and_vulnerable_ground_truth(self):
         for c in CASES:
+            if c["oracle"] in h.OOB_ORACLES: continue  # out-of-band oracles need the Broker-run sink
             for profile,expected in (("fixed",False),("vulnerable",True)):
                 f=Fixture(profile)
                 self.assertTrue(h.control_valid(c,f.send(c["control"])),c["id"])
