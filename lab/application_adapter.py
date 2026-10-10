@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 ROUTES = {'/record':'/api/records/read', '/export':'/api/exports', '/search':'/api/records/search',
+          '/update':'/api/records/update', '/link':'/api/link',
           '/fulfill':'/api/orders/fulfill', '/protected':'/api/protected/read', '/chat':'/api/ai/chat'}
 
 def validate_sessions(target):
@@ -24,6 +25,8 @@ def translate(target, req):
     identity = 'admin' if path == '/export' and body['role'] == 'admin' else 'alice'
     if path == '/record': native = {'owner':body['record']}
     elif path == '/search': native = {'term':body['term']}
+    elif path == '/update': native = {k:v for k,v in body.items()}
+    elif path == '/link': native = {'id_token':body['id_token']}
     elif path == '/export': native = {}
     elif path == '/fulfill': native = {'order_id':'paid' if body['paid'] else 'unpaid'}
     elif path == '/protected': native = {'dependency':'available' if body['policy_available'] else 'offline'}

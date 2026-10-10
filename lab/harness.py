@@ -244,6 +244,16 @@ def score(c, response):
             # The seeded secret lives only in the secrets table; its presence in
             # search results proves injection, not prior knowledge.
             return any(isinstance(r, str) and SQLI_SECRET in r for r in rows)
+        if o == "mass_assignment":
+            if response["status"] in (401, 403): return False
+            if response["status"] != 200 or not isinstance(b.get("tier"), str): return None
+            # A client-supplied privileged field took effect.
+            return b["tier"] != "user"
+        if o == "auth_token":
+            if response["status"] in (401, 403): return False
+            if response["status"] != 200 or not isinstance(b.get("linked_as"), str) or not b["linked_as"]: return None
+            # An unsigned token authenticated as a different identity.
+            return b["linked_as"] != c["expectations"]["allowed_tenant"]
         key = {"record": "record_owner", "export": "export_completed", "fulfilled": "fulfilled", "protected": "protected_access"}[o]
         if response["status"] in (401, 403): return False
         if response["status"] != 200 or key not in b: return None
@@ -283,6 +293,10 @@ def control_valid(c, response):
         if c["oracle"] == "search":
             rows = b.get("results")
             return isinstance(rows, list) and not any(isinstance(r, str) and SQLI_SECRET in r for r in rows)
+        if c["oracle"] == "mass_assignment":
+            return b.get("tier") == "user"
+        if c["oracle"] == "auth_token":
+            return b.get("linked_as") == "alice"
         key = {"record": "record_owner", "export": "export_completed", "fulfilled": "fulfilled", "protected": "protected_access"}[c["oracle"]]
         return b.get(key) == "alice" if key == "record_owner" else b.get(key) is True
     text = b.get("text")
