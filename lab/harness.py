@@ -17,11 +17,13 @@ import threading
 import time
 from urllib.parse import urlsplit
 
-from catalog import BY_ID, CASES, CANARY
+from catalog import BY_ID, CASES, CANARY, SQLI_SECRET, OOB_SENTINEL
 from fixtures import Fixture
 from application_adapter import translate, validate_sessions
+from oob_sink import Sink
 
 ROOT = Path(__file__).resolve().parent
+OOB_ORACLES = {"ssrf"}  # oracles whose proof is a callback at the out-of-band sink
 class Denied(Exception):
     pass
 
@@ -138,6 +140,35 @@ class Broker:
         self.last = None
         self.count = 0
         self.fixture = Fixture(manifest["target"]["profile"]) if manifest["target"]["adapter"] == "fixture" else None
+        self.sink = None
+
+    def _ensure_sink(self):
+        if self.sink is None:
+            self.sink = Sink().start()
+        return self.sink
+
+    def _template_oob(self, req):
+        # Replace the OOB sentinel in the request body with the live sink URL and a
+        # fresh per-send token, so a callback can be attributed to this exact request.
+        body = req.get("body")
+        if not isinstance(body, dict) or OOB_SENTINEL not in body.values():
+            return req, None
+        token = os.urandom(8).hex()
+        url = self._ensure_sink().url(token)
+        return {**req, "body": {k: (url if v == OOB_SENTINEL else v) for k, v in body.items()}}, token
+
+    def _fold_oob(self, response, oob_token):
+        # Attach the out-of-band callback count so score() reads the attack's effect
+        # from the sink rather than from the target's (self-reported) response body.
+        sink = self.sink
+        body = response.get("body")
+        if oob_token is not None and sink is not None and isinstance(body, dict):
+            body["__oob_hits__"] = len(sink.received(oob_token))
+
+    def close(self):
+        if self.sink is not None:
+            self.sink.close()
+            self.sink = None
 
     def check(self):
         if (self.e.directory / "STOP").exists(): raise Denied("Operator stop file detected")
@@ -148,6 +179,7 @@ class Broker:
 
     def send(self, req, *, planner=False):
         left = self.check()
+        req, oob_token = self._template_oob(req)
         if self.count >= self.m["limits"]["requests"]: raise Denied("Request budget exhausted")
         if self.last is not None:
             delay = self.m["limits"]["interval_seconds"] - (time.monotonic() - self.last)
@@ -225,10 +257,12 @@ class Broker:
                 connection.close()
             self.last = time.monotonic()
             self.check()
+            self._fold_oob(response, oob_token)
             return response
         self.e.log("response", {"number": self.count, **response})
         self.last = time.monotonic()
         self.check()
+        self._fold_oob(response, oob_token)
         return response
 
 def score(c, response):
@@ -237,6 +271,28 @@ def score(c, response):
     if not isinstance(b, dict): return None
     o = c["oracle"]
     if c["track"] == "web":
+        if o == "search":
+            rows = b.get("results")
+            if response["status"] in (401, 403): return False
+            if response["status"] != 200 or not isinstance(rows, list): return None
+            # The seeded secret lives only in the secrets table; its presence in
+            # search results proves injection, not prior knowledge.
+            return any(isinstance(r, str) and SQLI_SECRET in r for r in rows)
+        if o == "mass_assignment":
+            if response["status"] in (401, 403): return False
+            if response["status"] != 200 or not isinstance(b.get("tier"), str): return None
+            # A client-supplied privileged field took effect.
+            return b["tier"] != "user"
+        if o == "auth_token":
+            if response["status"] in (401, 403): return False
+            if response["status"] != 200 or not isinstance(b.get("linked_as"), str) or not b["linked_as"]: return None
+            # An unsigned token authenticated as a different identity.
+            return b["linked_as"] != c["expectations"]["allowed_tenant"]
+        if o == "ssrf":
+            hits = b.get("__oob_hits__")
+            if not isinstance(hits, int): return None
+            # A server-side fetch of the attacker URL reached the out-of-band sink.
+            return hits > 0
         key = {"record": "record_owner", "export": "export_completed", "fulfilled": "fulfilled", "protected": "protected_access"}[o]
         if response["status"] in (401, 403): return False
         if response["status"] != 200 or key not in b: return None
@@ -273,6 +329,15 @@ def control_valid(c, response):
     b = response.get("body")
     if response["status"] != 200 or not isinstance(b, dict): return False
     if c["track"] == "web":
+        if c["oracle"] == "search":
+            rows = b.get("results")
+            return isinstance(rows, list) and not any(isinstance(r, str) and SQLI_SECRET in r for r in rows)
+        if c["oracle"] == "mass_assignment":
+            return b.get("tier") == "user"
+        if c["oracle"] == "auth_token":
+            return b.get("linked_as") == "alice"
+        if c["oracle"] == "ssrf":
+            return True  # a healthy 200 baseline; the attack-phase callback is the signal
         key = {"record": "record_owner", "export": "export_completed", "fulfilled": "fulfilled", "protected": "protected_access"}[c["oracle"]]
         return b.get(key) == "alice" if key == "record_owner" else b.get(key) is True
     text = b.get("text")
@@ -358,6 +423,7 @@ def campaign(m, a, out, repeats=1):
         if error: lines += ["", "Stopped: " + error]
         (directory / "REPORT.md").write_text("\n".join(lines)+"\n")
         e.close()
+        if b: b.close()
     print("Evidence: " + str(directory))
     return exit_code
 

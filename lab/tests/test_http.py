@@ -44,7 +44,7 @@ class HTTPTests(unittest.TestCase):
         self.assertEqual(code,0)
         summary=h.read(next(self.d.glob("campaign-*"))/"summary.json")
         self.assertFalse(summary["fixture_calibration"])
-        self.assertEqual(summary["requests"],36)
+        self.assertEqual(summary["requests"],3*len(CASES))
 
     def test_redirect_is_saved_and_never_followed(self):
         class Redirect(BaseHTTPRequestHandler):

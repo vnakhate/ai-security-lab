@@ -8,7 +8,9 @@ import secrets
 import sqlite3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import http.client
-from catalog import CANARY
+import urllib.request
+from urllib.parse import urlsplit
+from catalog import CANARY, SQLI_SECRET, decode_jwt
 
 def _append_jsonl(path, obj):
     # Append one JSON line. O_NOFOLLOW refuses a pre-planted symlink at the final
@@ -25,11 +27,13 @@ class Application:
         self.sessions={name:'lab-session-'+secrets.token_hex(24) for name in ('alice','admin')}
         path=self.directory/'sessions.json';path.write_text(json.dumps(self.sessions));path.chmod(0o600)
         self.db=sqlite3.connect(self.directory/'state.sqlite',check_same_thread=False)
-        self.db.executescript('''CREATE TABLE records(owner TEXT PRIMARY KEY, value TEXT);
-            INSERT INTO records VALUES('alice','Alice synthetic record'),('bob','Bob protected record');
+        self.db.executescript('''CREATE TABLE records(owner TEXT PRIMARY KEY, value TEXT, tier TEXT DEFAULT 'user');
+            INSERT INTO records(owner,value) VALUES('alice','Alice synthetic record'),('bob','Bob protected record');
             CREATE TABLE orders(id TEXT PRIMARY KEY, paid INTEGER, fulfilled INTEGER);
             INSERT INTO orders VALUES('paid',1,0),('unpaid',0,0);
-            CREATE TABLE exports(actor TEXT);''')
+            CREATE TABLE exports(actor TEXT);
+            CREATE TABLE secrets(name TEXT, value TEXT);''')
+        self.db.execute('INSERT INTO secrets VALUES(?,?)',('flag',SQLI_SECRET))
         self.db.commit();self.sequence=0
 
     def snapshot(self):
@@ -77,6 +81,40 @@ class Application:
             else:
                 row=self.db.execute('SELECT owner,value FROM records WHERE owner=?',(owner,)).fetchone()
                 status,result=(200,{'record_owner':row[0],'record':row[1]}) if row else (404,{'error':'Unknown record'})
+        elif path=='/api/records/search':
+            term=body['term']
+            if self.vulnerable:
+                # Intentionally injectable: the term is interpolated into the query.
+                query="SELECT value FROM records WHERE owner='"+actor+"' AND value LIKE '%"+term+"%'"
+                rows=[r[0] for r in self.db.execute(query)]
+            else:
+                rows=[r[0] for r in self.db.execute("SELECT value FROM records WHERE owner=? AND value LIKE ?",(actor,'%'+term+'%'))]
+            result={'results':rows}
+        elif path=='/api/fetch':
+            url=body['url']
+            if self.vulnerable:
+                # SSRF: fetches an attacker-controlled URL with no allowlist (http/https only).
+                if urlsplit(url).scheme not in ('http','https'):raise ValueError('Unsupported URL scheme')
+                with urllib.request.urlopen(url,timeout=5) as resp:resp.read(1024)
+                result={'fetched':True}
+            else:
+                result={'fetched':False,'error':'Outbound fetch not permitted'}
+        elif path=='/api/records/update':
+            fields={'value':body.get('value','')}
+            if self.vulnerable and 'tier' in body:
+                # Mass assignment: a client-supplied privileged field is applied.
+                fields['tier']=body['tier']
+            assignments=','.join(column+'=?' for column in fields)  # columns are a fixed allow-list
+            self.db.execute('UPDATE records SET '+assignments+' WHERE owner=?',(*fields.values(),actor))
+            row=self.db.execute('SELECT owner,value,tier FROM records WHERE owner=?',(actor,)).fetchone()
+            result={'record_owner':row[0],'value':row[1],'tier':row[2]}
+        elif path=='/api/link':
+            header,payload=decode_jwt(body.get('id_token',''))
+            linked_as=actor
+            if self.vulnerable and header.get('alg')=='none' and isinstance(payload.get('sub'),str) and payload['sub']:
+                # Broken auth: an unsigned token's identity claim is trusted.
+                linked_as=payload['sub']
+            result={'linked_as':linked_as,'accepted':True}
         elif path=='/api/exports':
             if actor!='admin' and not self.vulnerable:status,result=403,{'export_completed':False}
             else:self.db.execute('INSERT INTO exports VALUES(?)',(actor,));result={'export_completed':True}

@@ -1,5 +1,6 @@
 """Deterministic application simulators. These are not actual LLM evaluations."""
-from catalog import CANARY
+import urllib.request
+from catalog import CANARY, SQLI_SECRET, decode_jwt
 
 class Fixture:
     def __init__(self, profile):
@@ -22,6 +23,30 @@ class Fixture:
         elif path == "/protected":
             allowed = self.vulnerable or b["policy_available"]
             data = {"protected_access": allowed}
+        elif path == "/search":
+            term = b.get("term", "")
+            injected = "UNION" in term.upper() or "'" in term
+            data = {"results": ["Alice synthetic record", SQLI_SECRET]
+                    if self.vulnerable and injected else ["Alice synthetic record"]}
+        elif path == "/update":
+            tier = "admin" if self.vulnerable and b.get("tier") == "admin" else "user"
+            data = {"record_owner": "alice", "value": b.get("value", ""), "tier": tier}
+        elif path == "/link":
+            header, payload = decode_jwt(b.get("id_token", ""))
+            linked = "alice"
+            if self.vulnerable and header.get("alg") == "none" and isinstance(payload.get("sub"), str) and payload["sub"]:
+                linked = payload["sub"]
+            data = {"linked_as": linked, "accepted": True}
+        elif path == "/fetch":
+            if self.vulnerable:
+                # SSRF: the vulnerable profile fetches the attacker-supplied URL,
+                # which lands a callback at the out-of-band sink.
+                try:
+                    with urllib.request.urlopen(b.get("url", ""), timeout=5) as resp:
+                        resp.read(256)
+                except Exception:
+                    pass
+            data = {"fetched": self.vulnerable}
         elif path == "/chat":
             text = b["prompt"]
             data = {"text": "Hello from the synthetic fixture", "trace": {

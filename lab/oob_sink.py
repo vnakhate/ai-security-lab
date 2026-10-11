@@ -84,10 +84,16 @@ class Sink:
         with self._lock:
             return [hit for hit in self.hits if hit['token'] == token]
 
-    def __enter__(self):
+    def start(self):
         self._thread.start()
         return self
 
-    def __exit__(self, *exc):
+    def close(self):
         self._server.shutdown()
         self._server.server_close()
+
+    def __enter__(self):
+        return self.start()
+
+    def __exit__(self, *exc):
+        self.close()
