@@ -107,6 +107,7 @@ def main():
     h.write(directory/'acceptance.json',acceptance)
     print(json.dumps({'evidence':str(directory),**acceptance},indent=2))
     return 0 if all(r['complete'] and r['independent_state_checks_passed'] and r['outcomes_match_ground_truth']
-                    and r['requests']==r['audit_records']==12 for r in reports if r['track']=='web') and all(r['complete'] for r in reports) else 2
+                    and r['requests']==r['audit_records']==3*sum(1 for x in CASES if x['track']=='web')
+                    for r in reports if r['track']=='web') and all(r['complete'] for r in reports) else 2
 
 if __name__=='__main__':raise SystemExit(main())
