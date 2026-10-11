@@ -2,11 +2,13 @@
 """Collect WAF observations without inferring application exploitation."""
 import argparse
 import datetime as dt
+import ipaddress
 import json
 import os
 from pathlib import Path
 import re
 import shutil
+import socket
 import subprocess
 import sys
 import time
@@ -34,6 +36,29 @@ def classify(exit_code, status, body):
     ):
         return "suspected_block"
     return "inconclusive"
+
+
+def resolve_public_endpoint(url):
+    """Resolve the target and refuse loopback/private/link-local/metadata addresses.
+
+    Returns (ip, host, port). curl is pinned to this ip so DNS rebinding cannot
+    swing the request onto an internal address after the check.
+    """
+    parsed = urlsplit(url)
+    host = parsed.hostname
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    addresses = {info[4][0] for info in socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)}
+    if not addresses:
+        raise ScopeError(f"Target {host} does not resolve")
+    for address in addresses:
+        ip = ipaddress.ip_address(address)
+        # Unwrap IPv4-mapped IPv6 (::ffff:a.b.c.d) so a mapped internal address
+        # cannot read as global on interpreters predating the is_global fix.
+        if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped is not None:
+            ip = ip.ipv4_mapped
+        if not ip.is_global or ip.is_multicast:
+            raise ScopeError(f"Target {host} resolves to non-global address {address}")
+    return sorted(addresses)[0], host, port
 
 
 def parse_args(argv=None):
@@ -79,6 +104,11 @@ def main(argv=None):
         return 2
     campaign=Campaign(approved)
     selected=[next(p for p in PROBES if p[0]==identifier) for identifier in approved['probes']]
+    try:
+        pinned_ip, pin_host, pin_port = resolve_public_endpoint(args.url)
+    except (ScopeError, OSError, ValueError) as exc:
+        print('Collection denied: '+str(exc), file=sys.stderr)
+        return 2
     curl = shutil.which("curl")
     if not curl:
         print("curl is required", file=sys.stderr)
@@ -119,6 +149,7 @@ def main(argv=None):
         # extra protocols, retries, or disabled TLS verification are enabled.
         command = [curl, "-q", "--silent", "--show-error", "--globoff",
                    "--path-as-is", "--proto", "=http,https", "--noproxy", "*",
+                   "--resolve", f"{pin_host}:{pin_port}:{pinned_ip}",
                    "--connect-timeout", str(min(args.connect_timeout,remaining)),
                    "--max-time", str(min(args.max_time,remaining)), "--max-filesize", "1048576",
                    "--dump-header", str(folder / "response-headers.txt"),

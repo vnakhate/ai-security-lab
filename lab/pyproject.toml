@@ -2,5 +2,5 @@
 name = "ai-security-lab-harness"
 version = "0.1.0"
 description = "Scoped local application and AI application security campaigns"
-requires-python = ">=3.12"
+requires-python = ">=3.12.4"
 dependencies = []
